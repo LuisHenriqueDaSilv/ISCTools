@@ -7,7 +7,7 @@ import BasesNumericas from './Pages/BasesNumericas'
 const router = createBrowserRouter([
   {
     path: "/bases-numericas",
-    element: BasesNumericas()
+    element: <BasesNumericas/>
   },
   {
     path: "/",
