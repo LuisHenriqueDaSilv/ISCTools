@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import styles from './styles.module.scss'
 
 import {converterBase} from '../../api/baseConverter'
@@ -15,9 +15,22 @@ export default function BasesNumericas() {
 
   function convert(event: FormDataEvent) {
     event.preventDefault()
-
-    setResult(converterBase(originalNumber, base, targetBase, originComp, targetComp, precision))
+    try {
+      const result = converterBase(originalNumber, base, targetBase, originComp, targetComp, precision)
+      setResult(result)
+    } catch (error) {
+      setResult(`${error}`)
+    }
   }
+
+  useEffect(() => {
+    setTimeout(() => {
+      window.scrollTo({
+        top: document.body.scrollHeight,
+        behavior: 'smooth', // Define a rolagem suave
+      });
+    }, 100)
+  }, [])
 
   return (
     <div className={styles.container}>
