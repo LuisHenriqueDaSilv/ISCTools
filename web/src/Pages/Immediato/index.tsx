@@ -52,7 +52,7 @@ export default function Immediato() {
           para instruções de salto condicional ou incondicional no seu código Assembly RISC-V.
         </p>
       </header>
-
+      {/*@ts-ignore*/}
       <form onSubmit={calc}>
 
         <div>

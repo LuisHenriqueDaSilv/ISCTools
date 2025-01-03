@@ -2,10 +2,10 @@ import { converterBase } from "./baseConverter";
 
 const simbolos = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ';
 
-export function immeCalc(num, selectedFmts, inputType, base) {
+export function immeCalc(num:string, selectedFmts:any, inputType:any, base:any) {
   const domain = simbolos.slice(0, base);
   let invalidValue = false;
-  num.split('').map((char) => {
+  num.split('').map((char:any) => {
       if(domain.indexOf(char) < 0 && char != '-'){
           invalidValue = true
       }    
@@ -14,10 +14,11 @@ export function immeCalc(num, selectedFmts, inputType, base) {
       throw new Error("O número fornecido contém caracteres inválidos para a base de origem.");
   }
 
+  let newNum:any = num
   if(inputType == "operacoes"){
-    num = num*4
+    newNum = parseInt(num) *4
   }
-  const bin = converterBase(`${num}`, base, 2, false, true, 32 )
+  const bin = converterBase(`${newNum}`, base, 2, false, true, 32 )
   if(selectedFmts == 'J'){
     const firstPart = bin.slice(21, 31)
     const secondPart = bin.slice(12, 20)

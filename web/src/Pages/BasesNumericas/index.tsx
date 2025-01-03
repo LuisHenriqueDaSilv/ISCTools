@@ -43,6 +43,7 @@ export default function BasesNumericas() {
         </p>
       </header>
 
+      {/*@ts-ignore*/}
       <form onSubmit={convert}>
 
         <div>
