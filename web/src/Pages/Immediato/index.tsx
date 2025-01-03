@@ -1,10 +1,10 @@
 import { useEffect, useState } from "react";
 import styles from './styles.module.scss'
+import { immeCalc } from "../../api/immeCalc";
 
 const fmts = [
   "B",
   "J",
-  "S",
 ]
 
 const inputTypes = [
@@ -21,13 +21,14 @@ export default function Immediato() {
   const [result, setResult] = useState('');
 
 
-  function calc(event:FormDataEvent) { 
+  function calc(event: FormDataEvent) {
     event.preventDefault()
-    console.log(`selectedFmts: ${selectedFmts} `)
-    console.log(`selectedInputType: ${selectedInputType} `)
-    console.log(`number: ${numberInput} `)
-    console.log(`base: ${base} `)
-    
+    try {
+      const result_ = immeCalc(numberInput, selectedFmts, selectedInputType, base);
+      setResult(result_)
+    } catch (error) {
+      setResult(`${error}`);      
+    }
   }
 
   useEffect(() => {
@@ -73,7 +74,7 @@ export default function Immediato() {
         </div>
 
         <div>
-          <label>numero (Sem prefixo):</label>
+          <label>numero (Em sinal/magnitude):</label>
           <input
             onChange={(event) => setNumberInput(event.target.value)}
             value={numberInput}
@@ -100,7 +101,7 @@ export default function Immediato() {
         </div>
 
         <div>
-          <label>base do numero informado (Em sinal/magnitude):</label>
+          <label>base do numero informado:</label>
           <select
             onChange={(choice) => setBase(choice.target.value)}
             value={base}
@@ -118,6 +119,11 @@ export default function Immediato() {
         </button>
 
       </form>
+
+      <div className={styles.resultsContainer}>
+        <label>resultado:</label>
+        <h1>{result}</h1>
+      </div>
     </div>
   )
 }
