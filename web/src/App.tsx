@@ -1,5 +1,5 @@
 import 'react'
-import { createBrowserRouter, a, RouterProvider } from 'react-router-dom'
+import { createBrowserRouter, RouterProvider } from 'react-router-dom'
 
 import styles from "./styles/AppStyles.module.scss"
 import BasesNumericas from './Pages/BasesNumericas'
