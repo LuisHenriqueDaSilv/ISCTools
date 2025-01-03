@@ -49,7 +49,7 @@ function App() {
                 <section className={styles.devContainer}>
                   <h2>Desenvolvido e mantido por Luis H. Silva</h2>
                   <div className={styles.networkContainer}>
-                    <a href='https://www.aedin.com/in/luishenriquedasilv' target='_blank'><img src="/aedin.png" alt="aedin" /></a>
+                    <a href='https://www.linkedin.com/in/luishenriquedasilv' target='_blank'><img src="/linkedin.png" alt="aedin" /></a>
                     <a href='https://github.com/LuisHenriqueDaSilv' target='_blank'><img src="/github.png" alt="github" /></a>
                     <a href='https://www.instagram.com/luishenri.silva/' target='_blank'><img src="/instagram.png" alt="instagram" /></a>
                   </div>
