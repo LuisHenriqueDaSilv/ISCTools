@@ -118,7 +118,7 @@ function decodeRiscV(binary:any) {
     case "0100011": {
       const imme1 = binary.slice(0, 7)
       const imme2 = binary.slice(20, 25)
-      const ans = `${instructions[opcode][funct3]} ${REGISTER_MAP[rs1]}, ${parseInt(`${imme1}${imme2}`, 2)}(${REGISTER_MAP[rs2]})`
+      const ans = `${instructions[opcode][funct3]} ${REGISTER_MAP[rs2]}, ${parseInt(`${imme1}${imme2}`, 2)}(${REGISTER_MAP[rs1]})`
       return ans
       break
     }
