@@ -33,5 +33,3 @@ export function immeCalc(num:string, selectedFmts:any, inputType:any, base:any) 
     return 'FMTS desconhecido'
   }
 }
-
-console.log(immeCalc('-12', "B", "byte", 10))

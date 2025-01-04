@@ -4,6 +4,7 @@ import { createBrowserRouter, RouterProvider } from 'react-router-dom'
 import styles from "./styles/AppStyles.module.scss"
 import BasesNumericas from './Pages/BasesNumericas'
 import Immediato from './Pages/Immediato'
+import Disassembler from './Pages/Disassembler'
 
 const router = createBrowserRouter([
   {
@@ -13,6 +14,10 @@ const router = createBrowserRouter([
   {
     path: "/immediato",
     element: <Immediato />
+  },
+  {
+    path: "/disassembler",
+    element: <Disassembler />
   },
   {
     path: "/",
@@ -69,13 +74,13 @@ function App() {
             <a href="/immediato">
               <div>
                 <img alt="icon 0b>0x" src="0b_0x.png"></img>
-                <p>calculadora de immediato</p>
+                <p>immediato</p>
               </div>
             </a>
-            <a href="https://google.com">
+            <a href="/disassembler">
               <div>
                 <img alt="icon 0b>0x" src="0b_0x.png"></img>
-                <p>assembly para código de máquina</p>
+                <p>Disassembler</p>
               </div>
             </a>
             <a href="https://google.com">
