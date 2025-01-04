@@ -5,7 +5,7 @@ import { disassembler } from '../../api/disassembler';
 export default function Disassembler() {
 
   const [instructions, setInstructions] = useState('');
-  const [base, setBase] = useState('');
+  const [base, setBase] = useState('2');
   const [result, setResult] = useState<string[]>([]);
 
   const textbox = useRef(null);
