@@ -5,6 +5,7 @@ import styles from "./styles/AppStyles.module.scss"
 import BasesNumericas from './Pages/BasesNumericas'
 import Immediato from './Pages/Immediato'
 import Disassembler from './Pages/Disassembler'
+import Assembler from './Pages/assembler'
 
 const router = createBrowserRouter([
   {
@@ -18,6 +19,10 @@ const router = createBrowserRouter([
   {
     path: "/disassembler",
     element: <Disassembler />
+  },
+  {
+    path: "/assembler",
+    element: <Assembler />
   },
   {
     path: "/",
@@ -74,7 +79,7 @@ function App() {
             <a href="/immediato">
               <div>
                 <img alt="icon 0b>0x" src="0b_0x.png"></img>
-                <p>immediato</p>
+                <p>Immediato</p>
               </div>
             </a>
             <a href="/disassembler">
@@ -83,10 +88,10 @@ function App() {
                 <p>Disassembler</p>
               </div>
             </a>
-            <a href="https://google.com">
+            <a href="/assembler">
               <div>
                 <img alt="icon 0b>0x" src="0b_0x.png"></img>
-                <p>código de maquina para assembly</p>
+                <p>Assembler</p>
               </div>
             </a>
 

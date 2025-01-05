@@ -90,7 +90,7 @@ function decodeRiscV(binary:any) {
     case "0000011": {
 
       const imme = binary.slice(0, 12)
-      const ans = `${instructions[opcode][funct3]} ${REGISTER_MAP[rd]} ${parseInt(imme, 2)}(${REGISTER_MAP[rs1]})`
+      const ans = `${instructions[opcode][funct3]} ${REGISTER_MAP[rd]}, ${parseInt(imme, 2)}(${REGISTER_MAP[rs1]})`
       return ans
       break
     }
@@ -110,7 +110,7 @@ function decodeRiscV(binary:any) {
 
     case "0010111": {
       const imme = binary.slice(0, 20)
-      const ans = `${instructions[opcode][funct3]} ${REGISTER_MAP[rd]}, ${converterBase(imme, 2, 10, true, false)}`
+      const ans = `auipc ${REGISTER_MAP[rd]}, ${converterBase(imme, 2, 10, true, false)}`
       return ans
       break
     }
@@ -154,18 +154,18 @@ function decodeRiscV(binary:any) {
 
     case "1100111": {
         const imme = binary.slice(0, 12)
-        const ans = `${instructions[opcode][funct3]} ${REGISTER_MAP[rd]}, ${REGISTER_MAP[rs1]}, ${converterBase(imme, 2, 10, true, false)}`
+        const ans = `jalr ${REGISTER_MAP[rd]}, ${REGISTER_MAP[rs1]}, ${converterBase(imme, 2, 10, true, false)}`
         return ans
     }
 
     case '1101111': {
       const imme = `${binary.slice(12, 20)}${binary[11]}${binary.slice(1, 11)}0`.padStart(32, binary[0])
-      const ans = `${instructions[opcode][funct3]} ${REGISTER_MAP[rd]}, ${parseInt(converterBase(imme, 2, 10, true, false))}` 
+      const ans = `jal ${REGISTER_MAP[rd]}, ${parseInt(converterBase(imme, 2, 10, true, false))}` 
       return ans
     }
 
     case '1110011': {
-      const rs2b = binary.slice(3, 8)
+      const rs2b = binary.slice(7, 12)
       if(rs2b == '00010'){
         return 'uret'
       } else {
