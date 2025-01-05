@@ -139,8 +139,9 @@ function decodeRiscV(binary:any) {
     }
 
     case "0110111": {
+      console.log(funct7)
       const imme = binary.slice(0, 20)
-      const ans = `${instructions[opcode][funct3]} ${REGISTER_MAP[rd]}, 0x${converterBase(imme, 2, 16, false, false)}`
+      const ans = `lui ${REGISTER_MAP[rd]}, 0x${converterBase(imme, 2, 16, false, false)}`
       return ans
     }
 
