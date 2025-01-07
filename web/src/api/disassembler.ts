@@ -97,7 +97,7 @@ function decodeRiscV(binary:any) {
     case "0010011": {
 
       if (funct3 == "101") {
-        const imme = binary.slice(0, 12)
+        const imme = binary.slice(7, 12)
         const ans = `${instructions[opcode][funct3][funct7]} ${REGISTER_MAP[rd]}, ${REGISTER_MAP[rs1]}, ${converterBase(imme, 2, 10, true, false)}`
         return ans
       } else {
@@ -177,8 +177,6 @@ function decodeRiscV(binary:any) {
       throw new Error("Opcode desconhecido");
   }
 }
-
-
 
 
 export function disassembler(instructs:any, base:any) {
