@@ -49,7 +49,8 @@ const instructionSet = {
   ecall: {opcode: "1110011", funct3: "000"},
   uret: {opcode: "1110011", funct3: "000"},
   ret: {},
-  j: {opcode: "1101111"}
+  j: {opcode: "1101111"},
+  li: {opcode: "0010011", funct3: "000"}
 
 } as any;
 
@@ -167,6 +168,7 @@ function assemble(instruction:any) {
     case "ori":
     case "andi":
     case "xori": {
+      console.log(args)
       const imme = converterBase(args[2], 10, 2, false, true, 12)
       if (
         !registerMap[args[1]] ||
@@ -313,6 +315,21 @@ function assemble(instruction:any) {
       return (
         immed+
         "00000"+
+        details.opcode
+      )
+    }
+    case "li": {
+      const imme = converterBase(args[1], 10, 2, false, true, 12)
+      if (
+        !registerMap[args[0]]
+      ) {
+        return `Erro: registrador invalido (${instruction})`
+      }
+      return (
+        imme +
+        "00000" +
+        details.funct3 +
+        registerMap[args[0]] +
         details.opcode
       )
     }
