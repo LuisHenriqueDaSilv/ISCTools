@@ -35,7 +35,7 @@ export default function Disassembler() {
 
   function convert(event: FormDataEvent) {
     event.preventDefault()
-    const ans = disassembler(instructions, base)
+    const ans = disassembler(instructions, parseInt(base))
     setResult(ans)
   }
 

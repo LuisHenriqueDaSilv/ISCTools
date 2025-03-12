@@ -1,3 +1,4 @@
+import { OpcodeMapping } from "../@Types";
 import { converterBase } from "./baseConverter";
 
 const REGISTER_MAP = [
@@ -7,7 +8,7 @@ const REGISTER_MAP = [
   "s8", "s9", "s10", "s11", "t3", "t4", "t5", "t6"
 ]
 
-const instructions = {
+const instructions:OpcodeMapping = {
   "0000011": {
     "000": "lb",
     "001": "lh",
@@ -75,9 +76,9 @@ const instructions = {
     // "000": "ecall",
     // "000": "uret"
   }
-} as any
+}
 
-function decodeRiscV(binary:any) {
+function decodeRiscV(binary:string) {
   const opcode = binary.slice(25, 32);
   const rd = parseInt(binary.slice(20, 25), 2);
   const funct3 = binary.slice(17, 20);
@@ -98,6 +99,7 @@ function decodeRiscV(binary:any) {
 
       if (funct3 == "101") {
         const imme = binary.slice(7, 12)
+        //@ts-ignore a
         const ans = `${instructions[opcode][funct3][funct7]} ${REGISTER_MAP[rd]}, ${REGISTER_MAP[rs1]}, ${converterBase(imme, 2, 10, true, false)}`
         return ans
       } else {
@@ -126,9 +128,11 @@ function decodeRiscV(binary:any) {
     case "0110011": {
       if (funct7 == "0000001" && (funct3 == "000" || funct3 == "001" || funct3 == "010" || funct3 == "011" || funct3 == "100" || funct3 == "101" || funct3 == "110" || funct3 == "111"
       )) {
+        //@ts-ignore a
         const ans = `${instructions[opcode][funct7][funct3]} ${REGISTER_MAP[rd]}, ${REGISTER_MAP[rs1]}, ${REGISTER_MAP[rs2]}`
         return ans
       } else if ((funct3 == "000" || funct3 == "101")) {
+        //@ts-ignore a
         const ans = `${instructions[opcode][funct3][funct7]} ${REGISTER_MAP[rd]}, ${REGISTER_MAP[rs1]}, ${REGISTER_MAP[rs2]}`
         return ans
       } else {
@@ -179,14 +183,14 @@ function decodeRiscV(binary:any) {
 }
 
 
-export function disassembler(instructs:any, base:any) {
+export function disassembler(instructs:string, base:number) {
   const instructions = instructs.split('\n')
 
   const ans = [] as any
 
-  instructions.map((instruction:any) => {
+  instructions.map((instruction:string) => {
     if (instruction != "") {
-      let formatedInstruction
+      let formatedInstruction = instruction
       if (base == 16) {
         formatedInstruction = instruction.replace('0x', '')
       } else if (base == 2) {

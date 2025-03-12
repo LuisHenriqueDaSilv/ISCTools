@@ -1,7 +1,10 @@
+import { InstructionSet, RegisterSet } from '../@Types';
 import { converterBase } from './baseConverter'
 import { immeCalc } from './immeCalc'
 
-const instructionSet = {
+
+
+const instructionSet:InstructionSet = {
   add: { opcode: "0110011", funct3: "000", funct7: "0000000" },
   sub: { opcode: "0110011", funct3: "000", funct7: "0100000" },
   addi: { opcode: "0010011", funct3: "000" },
@@ -52,9 +55,9 @@ const instructionSet = {
   j: {opcode: "1101111"},
   li: {opcode: "0010011", funct3: "000"}
 
-} as any;
+};
 
-const registerMap = {
+const registerMap:RegisterSet = {
   x0: "00000",
   zero: "00000",
   x1: "00001",
@@ -120,9 +123,9 @@ const registerMap = {
   x31: "11111",
   t6: "11111"
 
-} as any;
+}
 
-function assemble(instruction:any) {
+function assemble(instruction:string) {
   const [instr, ...args] = instruction.toLowerCase().replace(/,|\(/g, " ").replace(/\)/g, "").split(/\s+/);
   const details = instructionSet[instr];
 
@@ -338,7 +341,7 @@ function assemble(instruction:any) {
   }
 }
 
-export function assembler(instructs:any, base:any) {
+export function assembler(instructs:string, base:Number) {
   const instructions = instructs.split('\n')
 
   const ans = [] as any

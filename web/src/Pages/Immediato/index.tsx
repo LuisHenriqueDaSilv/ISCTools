@@ -24,7 +24,7 @@ export default function Immediato() {
   function calc(event: FormDataEvent) {
     event.preventDefault()
     try {
-      const result_ = immeCalc(numberInput.toUpperCase().trim(), selectedFmts, selectedInputType, base);
+      const result_ = immeCalc(numberInput.toUpperCase().trim(), selectedFmts, selectedInputType, parseInt(base));
       setResult(result_)
     } catch (error) {
       setResult(`${error}`);      

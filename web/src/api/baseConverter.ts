@@ -1,6 +1,6 @@
 const simbolos = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ';
 
-function complementoParaSinalMagnitude(numero:any, base:any) {
+function complementoParaSinalMagnitude(numero:string, base:number) {
 
     const tamanho = numero.length;
     const maxValor = BigInt(base) ** BigInt(tamanho);
@@ -15,12 +15,12 @@ function complementoParaSinalMagnitude(numero:any, base:any) {
     return numeroDecimal;
 }
 
-function decimalParaBaseSinalMagnitude(numero:any, base:any) {
+function decimalParaBaseSinalMagnitude(numero:bigint, base:number) {
 
     const negativo = numero < 0;
     const numeroMagnitude = BigInt(Math.abs(Number(numero)));
 
-    function paraBase(numero:any, base:any) {
+    function paraBase(numero:bigint, base:number) {
         const simbolos = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ';
         let resultado = '';
         const bigBase = BigInt(base);
@@ -42,7 +42,7 @@ function decimalParaBaseSinalMagnitude(numero:any, base:any) {
     return numeroBase;
 }
 
-function paraComplementoDaBase(numero:any, base:any, nCasas:any) {
+function paraComplementoDaBase(numero:string, base:number, nCasas:number) {
 
     const isNegativo = numero.startsWith("-");
     const numSemSinal = isNegativo ? numero.slice(1) : numero;
@@ -68,10 +68,10 @@ function paraComplementoDaBase(numero:any, base:any, nCasas:any) {
     return resultado;
 }
 
-export function converterBase(num:any, baseOrigem:any, baseDestino:any, complementoOrigem = false, resultadoComplemento = false, precisao:any = 10) {
+export function converterBase(num:string, baseOrigem:number, baseDestino:number, complementoOrigem = false, resultadoComplemento = false, precisao:number = 10) {
     const domain = simbolos.slice(0, baseOrigem);
     let invalidValue = false;
-    num.split('').map((char:any) => {
+    num.split('').map((char:string) => {
         if(domain.indexOf(char) < 0 && char != '-'){
             invalidValue = true
         }    

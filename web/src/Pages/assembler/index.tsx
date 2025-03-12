@@ -35,7 +35,7 @@ export default function Assembler() {
 
   function convert(event: FormDataEvent) {
     event.preventDefault()
-    const ans = assembler(instructions, base)
+    const ans = assembler(instructions, parseInt(base))
     setResult(ans)
   }
 

@@ -16,7 +16,7 @@ export default function BasesNumericas() {
   function convert(event: FormDataEvent) {
     event.preventDefault()
     try {
-      const result = converterBase(originalNumber.toUpperCase().trim(), base, targetBase, originComp, targetComp, precision)
+      const result = converterBase(originalNumber.toUpperCase().trim(), parseInt(base), parseInt(targetBase), originComp, targetComp, parseInt(precision))
       setResult(result)
     } catch (error) {
       setResult(`${error}`)
