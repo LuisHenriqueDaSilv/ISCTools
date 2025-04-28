@@ -7,6 +7,7 @@ import Immediato from './Pages/Immediato'
 import Disassembler from './Pages/Disassembler'
 import Assembler from './Pages/assembler'
 import About from './Pages/About'
+import IEEE754 from './Pages/IEEE754'
 import Nav from './Components/Nav'
 
 const router = createBrowserRouter([
@@ -33,6 +34,10 @@ const router = createBrowserRouter([
   {
     path: "/",
     element: <About />
+  },
+  {
+    path: "/ieee754",
+    element: <IEEE754/>
   }
 ])
 

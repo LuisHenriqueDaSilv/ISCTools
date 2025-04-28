@@ -10,6 +10,12 @@ export default function Nav(){
             <p>bases numéricas</p>
           </div>
         </a>
+        <a href="/ieee754">
+          <div>
+            <img alt="icon 0b>0x" src="0b_0x.png"></img>
+            <p>IEEE754</p>
+          </div>
+        </a>
         <a href="/immediato">
           <div>
             <img alt="icon 0b>0x" src="0b_0x.png"></img>
