@@ -36,7 +36,7 @@ export default function BasesNumericas() {
     <div className={styles.container}>
 
       <header className={styles.header}>
-        <h1>conversor de bases numéricas</h1>
+        <h1>conversor de bases numéricas (Numeros inteiros)</h1>
         <p>
           Esta calculadora permite converter números de uma base numérica para outra de forma simples e eficiente. Para utilizá-la,
           insira o número que deseja converter, a base na qual ele está representado e a base para a qual deseja convertê-lo.
