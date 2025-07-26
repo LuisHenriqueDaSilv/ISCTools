@@ -16,8 +16,8 @@ O <a href="https://isc-tools.vercel.app/">ISCTools</a> foi desenvolvido com o in
 - <strong>✅ Calculadora de immediato para JAL (Linguagem de máquina Assembly RiscV)</strong>
 - <strong>✅ Disassembler (Conversor de linguagem de máquina para instruções RiscV)</strong>
 - <strong>✅ Assembler (Conversor de instruções RiscV para código de máquina)</strong>
-- <strong>🔨 Calculadora de ponto flutuante IEEE-754</strong>
-- <strong>🔨 Conversor de imagens para data Assembly</strong>
+- <strong>✅ Calculadora de ponto flutuante IEEE-754</strong>
+- <strong>▶️ Conversor de imagens para data Assembly</strong>
 - <strong>🔨 Conversor de músicas para data Assembly</strong>
 
 ## Próximas etapas:
