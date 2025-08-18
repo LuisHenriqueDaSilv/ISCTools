@@ -34,12 +34,27 @@ export default function About() {
           </article>
 
           <section className={styles.devContainer}>
-            <h2>Desenvolvido e mantido por Luis H. Silva</h2>
-            <div className={styles.networkContainer}>
+            <h2>Desenvolvido e mantido por</h2>
+            <div className={styles.colaboradorCard}>
+              <img src="/luissilva.png" alt="Luis Silva" className={styles.avatar} />
+              <h4>Luis Silva</h4>
+              <div className={styles.socialIcons}>
+                <a href="https://github.com/LuisHenriqueDaSilv" target="_blank" rel="noopener noreferrer">
+                  <img src="/github.svg" alt="GitHub" />
+                </a>
+                <a href="https://www.linkedin.com/in/luishenriquedasilv" target="_blank" rel="noopener noreferrer">
+                  <img src="/linkedin.svg" alt="LinkedIn" />
+                </a>
+                <a href="https://www.instagram.com/luishenri.silva/" target="_blank" rel="noopener noreferrer">
+                  <img src="/instagram.svg" alt="Instagram" />
+                </a>
+              </div>
+            </div>
+            {/* <div className={styles.networkContainer}>
               <a href='https://www.linkedin.com/in/luishenriquedasilv' target='_blank'><img src="/linkedin.png" alt="aedin" /></a>
               <a href='https://github.com/LuisHenriqueDaSilv' target='_blank'><img src="/github.png" alt="github" /></a>
               <a href='https://www.instagram.com/luishenri.silva/' target='_blank'><img src="/instagram.png" alt="instagram" /></a>
-            </div>
+            </div> */}
           </section>
 
         </div>

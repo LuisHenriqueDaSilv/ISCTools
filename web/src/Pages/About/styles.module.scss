@@ -66,6 +66,8 @@
                 }
             }
 
+
+
             .devContainer {
                 display: flex;
                 flex-direction: column;
@@ -73,41 +75,48 @@
                 align-items: center;
                 margin-top: 2rem;
 
-                h2 {
-                    font-size: 1.4rem;
+                .colaboradorCard {
+                    background: #f9fafc;
+                    padding: 1.5rem;
+                    border-radius: 1rem;
                     text-align: center;
-
-                    @media screen and (min-width: 768px) {
-                        font-size: 1.6rem;
-                    }
-                }
-
-                .networkContainer {
+                    width: 180px;
+                    min-height: 200px; // ← Aqui!
+                    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
                     display: flex;
-                    flex-wrap: wrap;
-                    gap: 1rem;
-                    justify-content: center;
+                    flex-direction: column;
+                    align-items: center;
+                    justify-content: flex-start;
 
-                    a {
-                        background: #EFEFEF;
-                        border: 1px solid rgba(0, 0, 0, 0.2);
-                        border-radius: 10px;
+                    .avatar {
+                        width: 13rem;
+                        height: 13rem;
+                        object-fit: cover;
+                        border-radius: 50%;
+                        margin-bottom: 1rem;
+
+                    }
+
+                    h4 {
+                        font-size: 1.4rem;
+                        margin-bottom: 0.5rem;
+                        color: #1e1e1e;
+                    }
+
+                    .socialIcons {
+                        margin-top: 0.5rem;
                         display: flex;
                         justify-content: center;
-                        align-items: center;
-                        padding: 0.5rem 1rem;
-                        transition: 200ms;
-                        height: 3.4;
-                        width: auto;
+                        gap: 0.75rem;
 
-                        img {
-                            height: 3.4rem;
+                        a img {
+                            width: 20px;
+                            height: 20px;
+                            transition: transform 0.2s ease;
 
-
-                        }
-
-                        &:hover {
-                            opacity: 0.7;
+                            &:hover {
+                                transform: scale(1.1);
+                            }
                         }
                     }
                 }

@@ -9,6 +9,7 @@ import Assembler from './Pages/assembler'
 import About from './Pages/About'
 import IEEE754 from './Pages/IEEE754'
 import Nav from './Components/Nav'
+import PNGConverter from './Pages/PngConverter'
 
 const router = createBrowserRouter([
   {
@@ -38,6 +39,10 @@ const router = createBrowserRouter([
   {
     path: "/ieee754",
     element: <IEEE754/>
+  },
+  {
+    path: "/png-to-data",
+    element: <PNGConverter/>
   }
 ])
 
