@@ -40,10 +40,10 @@ const router = createBrowserRouter([
     path: "/ieee754",
     element: <IEEE754/>
   },
-  {
-    path: "/png-to-data",
-    element: <PNGConverter/>
-  }
+  // {
+  //   path: "/png-to-data",
+  //   element: <PNGConverter/>
+  // }
 ])
 
 function App() {

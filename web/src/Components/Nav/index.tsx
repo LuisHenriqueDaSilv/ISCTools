@@ -34,12 +34,12 @@ export default function Nav(){
             <p>Assembler</p>
           </div>
         </a>
-        <a href="/png-to-data">
+        {/* <a href="/png-to-data">
           <div>
             <img alt="icon 0b>0x" src="0b_0x.png"></img>
             <p>PNG para .data</p>
           </div>
-        </a>
+        </a> */}
         <a href="/sobre">
           <div>
             <img alt="icon 0b>0x" src="0b_0x.png"></img>
