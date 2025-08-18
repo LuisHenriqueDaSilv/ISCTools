@@ -9,7 +9,7 @@ import Assembler from './Pages/assembler'
 import About from './Pages/About'
 import IEEE754 from './Pages/IEEE754'
 import Nav from './Components/Nav'
-import PNGConverter from './Pages/PngConverter'
+// import PNGConverter from './Pages/PngConverter'
 
 const router = createBrowserRouter([
   {
