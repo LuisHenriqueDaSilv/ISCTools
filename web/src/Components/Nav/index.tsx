@@ -28,18 +28,18 @@ export default function Nav(){
             <p>Disassembler</p>
           </div>
         </a>
-        <a href="/assembler">
-          <div>
-            <img alt="icon 0b>0x" src="0b_0x.png"></img>
-            <p>Assembler</p>
-          </div>
-        </a>
         {/* <a href="/png-to-data">
           <div>
             <img alt="icon 0b>0x" src="0b_0x.png"></img>
             <p>PNG para .data</p>
           </div>
         </a> */}
+        <a href="/assembler">
+          <div>
+            <img alt="icon 0b>0x" src="0b_0x.png"></img>
+            <p>Assembler</p>
+          </div>
+        </a>
         <a href="/sobre">
           <div>
             <img alt="icon 0b>0x" src="0b_0x.png"></img>
