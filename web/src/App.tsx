@@ -9,41 +9,18 @@ import Assembler from './Pages/assembler'
 import About from './Pages/About'
 import IEEE754 from './Pages/IEEE754'
 import Nav from './Components/Nav'
+import Lamarzito from './Pages/Lamarzito'
 // import PNGConverter from './Pages/PngConverter'
 
 const router = createBrowserRouter([
-  {
-    path: "/bases-numericas",
-    element: <BasesNumericas />
-  },
-  {
-    path: "/immediato",
-    element: <Immediato />
-  },
-  {
-    path: "/disassembler",
-    element: <Disassembler />
-  },
-  {
-    path: "/assembler",
-    element: <Assembler />
-  },
-  {
-    path: "/sobre",
-    element: <About />
-  },
-  {
-    path: "/",
-    element: <About />
-  },
-  {
-    path: "/ieee754",
-    element: <IEEE754/>
-  },
-  // {
-  //   path: "/png-to-data",
-  //   element: <PNGConverter/>
-  // }
+  { path: "/bases-numericas", element: <BasesNumericas /> },
+  { path: "/immediato", element: <Immediato /> },
+  { path: "/disassembler", element: <Disassembler /> },
+  { path: "/assembler", element: <Assembler /> },
+  { path: "/sobre", element: <About /> },
+  { path: "/", element: <About /> },
+  { path: "/ieee754", element: <IEEE754/> },
+  { path: "/lamarzito", element: <Lamarzito/>}
 ])
 
 function App() {

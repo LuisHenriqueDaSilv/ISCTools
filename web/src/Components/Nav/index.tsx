@@ -3,7 +3,12 @@ import styles from './styles.module.scss'
 export default function Nav(){
     return (
         <div className={styles.navContainer}>
-
+        <a href="/lamarzito">
+          <div>
+            <img alt="icon 0b>0x" src="0b_0x.png"></img>
+            <p>Lamarzito-Tutor</p>
+          </div>
+        </a>
         <a href="/bases-numericas">
           <div>
             <img alt="icon 0b>0x" src="0b_0x.png"></img>

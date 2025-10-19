@@ -1,0 +1,102 @@
+.container {
+    padding: 0 2rem;
+
+    .header {
+        display: flex;
+        flex-direction: row;
+        height: fit-content;
+        align-items: center;
+        justify-content: space-between;
+        gap: 4rem;
+        width: 90%;
+
+        .qrCode {
+            height: 20rem;
+        }
+
+        .infos {
+            h1 {
+                text-align: center;
+                font-size: 2.5rem;
+                font-weight: 600;
+                margin-bottom: 2rem;
+            }
+
+            p,
+            strong {
+                font-size: 1.8rem;
+                color: var(--gtc);
+
+            }
+
+            strong {
+                font-weight: 700;
+            }
+        }
+    }
+
+    .chatContainer {
+        border-radius: 8px;
+        display: flex;
+        /* layout and visual styles; responsive sizing applied in media queries */
+        /* height/width/overflow removed here so they can be applied only for >768px */
+        border: 1px solid rgba(0, 0, 0, 0.2);
+        box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.25);
+    }
+}
+
+@media (max-width: 768px) {
+    .container {
+        // background-color: purple;
+        gap: 2rem;
+        padding: 2rem;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        
+        .header {
+            flex-direction: column;
+        }
+
+        .chatContainer {
+            width: 100%;
+            height: 80vh;
+        }
+    }
+}
+
+@media (min-width: 768px) {
+    .container {
+        padding: 0 2rem;
+        margin-left: auto;
+        margin-right: auto;
+        box-sizing: border-box;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        min-height: 0;
+
+        .header {
+            width: 90%;
+        }
+
+        .chatContainer {
+            width: 100%;
+            max-width: 100%;
+            box-sizing: border-box;
+            flex: 1;
+            overflow: auto;
+        }
+    }
+}
+
+@media (max-width: 1200px) {
+    .container {
+        .header {
+            .lamarzitoIcon {
+                display: none;
+            }
+        }
+    }
+}
