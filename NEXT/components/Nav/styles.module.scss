@@ -1,0 +1,104 @@
+.navContainer {
+	width: 240px; /* Slimmed down from 280 */
+	height: 100vh;
+	background: var(--bg-nav);
+	border-right: 1px solid var(--border-subtle);
+	backdrop-filter: blur(30px);
+	display: flex;
+	flex-direction: column;
+	padding: 3rem 1.5rem;
+	position: sticky;
+	top: 0;
+	z-index: 100;
+
+	@media screen and (max-width: 768px) {
+		width: 100%;
+		height: auto;
+		flex-direction: row;
+		padding: 1rem 1.5rem;
+		overflow-x: auto;
+		gap: 1rem;
+		border-right: none;
+		border-bottom: 1px solid var(--border-subtle);
+		position: relative;
+	}
+
+	.logo {
+		font-family: 'Outfit', sans-serif;
+		font-size: 2rem;
+		font-weight: 800;
+		margin-bottom: 4rem;
+		padding: 0.8rem 1rem;
+		background: linear-gradient(135deg, var(--text-primary), var(--accent-blue));
+		-webkit-background-clip: text;
+		background-clip: text;
+		-webkit-text-fill-color: transparent;
+
+		@media screen and (max-width: 768px) {
+			display: none;
+		}
+	}
+
+	a {
+		display: flex;
+		align-items: center;
+		padding: 0.8rem 1.2rem;
+		border-radius: 10px;
+		margin-bottom: 0.4rem;
+		color: var(--text-secondary);
+		transition: all 0.2s ease;
+		
+		@media screen and (max-width: 768px) {
+			margin-bottom: 0;
+			white-space: nowrap;
+			padding: 0.6rem 1rem;
+		}
+
+		.navItem {
+			display: flex;
+			align-items: center;
+			gap: 1.2rem;
+
+			/* SVG Icons from Lucide */
+            svg {
+                width: 18px;
+                height: 18px;
+                stroke-width: 2px;
+                opacity: 0.6;
+                transition: all 0.2s ease;
+                color: var(--text-secondary);
+            }
+
+			p {
+				font-size: 1.3rem;
+				font-weight: 500;
+				letter-spacing: -0.01em;
+			}
+		}
+
+		&:hover {
+			background: var(--glass-bg);
+			color: var(--text-primary);
+
+			.navItem svg {
+				opacity: 1;
+				color: var(--accent-blue);
+			}
+		}
+
+		&.active {
+			background: rgba(255, 255, 255, 0.04);
+			color: var(--accent-blue);
+			box-shadow: inset 0 0 0 1px var(--border-highlight);
+
+			.navItem svg {
+				opacity: 1;
+				color: var(--accent-blue);
+			}
+
+			p {
+				font-weight: 600;
+			}
+		}
+	}
+}

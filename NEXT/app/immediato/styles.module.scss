@@ -1,0 +1,101 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  gap: 3rem;
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 2rem 0;
+
+  .header {
+    margin-bottom: 2rem;
+    
+    .pageTitle {
+        display: flex;
+        align-items: center;
+        gap: 1.5rem;
+        margin-bottom: 1rem;
+
+        .icon {
+            color: var(--accent-mint);
+        }
+    }
+
+    h1 {
+      font-size: 3.2rem;
+    }
+  }
+
+  .toolForm {
+    background: var(--bg-card);
+    padding: 3rem;
+    border-radius: 20px;
+    border: 1px solid var(--border-subtle);
+    display: flex;
+    flex-direction: column;
+    gap: 2.5rem;
+    backdrop-filter: blur(20px);
+
+    .gridRow {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 2rem;
+    }
+
+    .inputGroup {
+      display: flex;
+      flex-direction: column;
+      gap: 0.8rem;
+
+      label {
+        font-size: 1.2rem;
+        font-weight: 700;
+        color: var(--text-dim);
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+      }
+    }
+  }
+
+  .submitButton {
+    padding: 1.4rem;
+    border-radius: 12px;
+    background: var(--text-primary);
+    color: var(--bg-dark);
+    font-weight: 800;
+    font-size: 1.4rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    
+    &:hover {
+      transform: translateY(-2px);
+    }
+  }
+
+  .resultsArea {
+    animation: fadeIn 0.4s ease-out;
+
+    .resultCard {
+        padding: 3rem;
+        background: rgba(150, 230, 161, 0.04);
+        border-radius: 20px;
+        border: 1px solid rgba(150, 230, 161, 0.15);
+        text-align: center;
+
+        label {
+            display: block;
+            font-size: 1.1rem;
+            color: var(--accent-mint);
+            margin-bottom: 1.5rem;
+            font-weight: 800;
+            text-transform: uppercase;
+        }
+
+        .resultValue {
+            font-size: 2.8rem;
+            font-family: 'JetBrains Mono', monospace;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+    }
+  }
+}

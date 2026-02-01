@@ -1,0 +1,124 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  gap: 3rem;
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 2rem 0;
+
+  .header {
+    margin-bottom: 2rem;
+    
+    .pageTitle {
+        display: flex;
+        align-items: center;
+        gap: 1.5rem;
+        margin-bottom: 1rem;
+
+        .icon {
+            color: var(--accent-lavender);
+        }
+    }
+
+    h1 {
+      font-size: 3.2rem;
+    }
+  }
+
+  .toolForm {
+    background: var(--bg-card);
+    padding: 3rem;
+    border-radius: 20px;
+    border: 1px solid var(--border-subtle);
+    display: flex;
+    flex-direction: column;
+    gap: 2.5rem;
+    backdrop-filter: blur(20px);
+
+    .modeToggle {
+        display: flex;
+        background: rgba(0,0,0,0.2);
+        padding: 0.5rem;
+        border-radius: 12px;
+        gap: 0.5rem;
+
+        button {
+            flex: 1;
+            padding: 1rem;
+            border-radius: 8px;
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: var(--text-secondary);
+
+            &.active {
+                background: var(--border-highlight);
+                color: var(--text-primary);
+                box-shadow: var(--shadow-sm);
+            }
+
+            &:hover:not(.active) {
+                color: var(--text-primary);
+            }
+        }
+    }
+
+    .inputGroup {
+      display: flex;
+      flex-direction: column;
+      gap: 0.8rem;
+
+      label {
+        font-size: 1.2rem;
+        font-weight: 700;
+        color: var(--text-dim);
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+      }
+    }
+  }
+
+  .submitButton {
+    padding: 1.4rem;
+    border-radius: 12px;
+    background: var(--text-primary);
+    color: var(--bg-dark);
+    font-weight: 800;
+    font-size: 1.4rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    
+    &:hover {
+      transform: translateY(-2px);
+    }
+  }
+
+  .resultsArea {
+    animation: fadeIn 0.4s ease-out;
+
+    .resultCard {
+        padding: 3rem;
+        background: rgba(197, 178, 255, 0.04);
+        border-radius: 20px;
+        border: 1px solid rgba(197, 178, 255, 0.15);
+        text-align: center;
+
+        label {
+            display: block;
+            font-size: 1.1rem;
+            color: var(--accent-lavender);
+            margin-bottom: 1.5rem;
+            font-weight: 800;
+            text-transform: uppercase;
+        }
+
+        .resultValue {
+            font-size: 2.4rem;
+            font-family: 'JetBrains Mono', monospace;
+            font-weight: 600;
+            white-space: pre-wrap;
+            word-break: break-all;
+            color: var(--text-primary);
+        }
+    }
+  }
+}

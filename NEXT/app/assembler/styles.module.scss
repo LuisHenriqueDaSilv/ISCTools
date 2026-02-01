@@ -1,0 +1,148 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  gap: 3rem;
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 2rem 0;
+
+  .header {
+    margin-bottom: 2rem;
+    
+    .pageTitle {
+        display: flex;
+        align-items: center;
+        gap: 1.5rem;
+        margin-bottom: 1rem;
+
+        .icon {
+            color: var(--accent-peach);
+        }
+    }
+
+    h1 {
+      font-size: 3.2rem;
+    }
+  }
+
+  .toolForm {
+    background: var(--bg-card);
+    padding: 3rem;
+    border-radius: 20px;
+    border: 1px solid var(--border-subtle);
+    display: flex;
+    flex-direction: column;
+    gap: 2.5rem;
+    backdrop-filter: blur(20px);
+
+    .inputGroup {
+      display: flex;
+      flex-direction: column;
+      gap: 0.8rem;
+
+      label {
+        font-size: 1.2rem;
+        font-weight: 700;
+        color: var(--text-dim);
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+      }
+
+      .assemblerTextarea {
+        min-height: 160px;
+        resize: none;
+        font-family: 'JetBrains Mono', 'Courier New', monospace;
+        font-size: 1.4rem;
+        line-height: 1.6;
+        background: rgba(0, 0, 0, 0.2);
+        padding: 1.5rem;
+      }
+    }
+
+    .bottomRow {
+        display: flex;
+        align-items: flex-end;
+        justify-content: space-between;
+        gap: 2rem;
+
+        @media (max-width: 600px) {
+            flex-direction: column;
+            align-items: stretch;
+        }
+
+        .inputGroup {
+            flex: 1;
+        }
+    }
+  }
+
+  .submitButton {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    padding: 1.2rem 3rem;
+    border-radius: 12px;
+    background: var(--text-primary);
+    color: var(--bg-dark);
+    font-weight: 800;
+    font-size: 1.4rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    
+    &:hover {
+      transform: translateY(-2px);
+    }
+  }
+
+  .resultsArea {
+    animation: fadeIn 0.4s ease-out;
+    display: flex;
+    flex-direction: column;
+    gap: 1.2rem;
+
+    label {
+        font-size: 1.2rem;
+        font-weight: 700;
+        color: var(--accent-peach);
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+    }
+
+    .codeStack {
+        background: var(--bg-card);
+        border: 1px solid var(--border-subtle);
+        border-radius: 20px;
+        overflow: hidden;
+
+        .codeLine {
+            display: flex;
+            align-items: center;
+            border-bottom: 1px solid var(--border-subtle);
+            
+            &:last-child {
+                border-bottom: none;
+            }
+
+            .lineNumber {
+                width: 4rem;
+                padding: 1rem 0;
+                text-align: center;
+                background: rgba(255, 255, 255, 0.02);
+                color: var(--text-dim);
+                font-family: 'JetBrains Mono', monospace;
+                font-size: 1.2rem;
+                border-right: 1px solid var(--border-subtle);
+                user-select: none;
+            }
+
+            code {
+                padding: 1rem 2rem;
+                font-family: 'JetBrains Mono', monospace;
+                font-size: 1.4rem;
+                color: var(--accent-peach);
+            }
+        }
+    }
+  }
+}
