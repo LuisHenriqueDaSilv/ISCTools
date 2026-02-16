@@ -1,4 +1,5 @@
 import 'react'
+import { useState } from 'react'
 import { createBrowserRouter, RouterProvider, Outlet } from 'react-router-dom'
 
 import styles from "./styles/AppStyles.module.scss"
@@ -13,9 +14,11 @@ import Lamarzito from './Pages/Lamarzito'
 // import PNGConverter from './Pages/PngConverter'
 
 const Layout = () => {
+  const [sidebarCollapsed, setSidebarCollapsed] = useState(false)
+
   return (
     <div className={styles.appLayout}>
-      <Nav />
+      <Nav collapsed={sidebarCollapsed} onToggleCollapsed={() => setSidebarCollapsed((c) => !c)} />
       <main className={styles.mainContent}>
         <Outlet />
       </main>

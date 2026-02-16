@@ -9,6 +9,7 @@
 	flex-shrink: 0;
 	color: #808191;
 	/* Grey text for dark mode */
+	transition: width 0.25s ease, padding 0.25s ease;
 
 	@media (max-width: 1024px) {
 		width: 80px;
@@ -17,6 +18,41 @@
 
 	@media (max-width: 768px) {
 		display: none;
+	}
+
+	&.sidebarCollapsed {
+		width: 72px;
+		padding: 1.5rem 0.5rem;
+
+		.logoContainer {
+			justify-content: center;
+
+			.logoText {
+				display: none;
+			}
+		}
+
+		.navItem {
+			justify-content: center;
+			padding: 0.75rem;
+
+			.labelText {
+				display: none;
+			}
+
+			&.active::after {
+				display: none;
+			}
+		}
+
+		.toggleLabel {
+			display: none;
+		}
+
+		.footer .toggleButton {
+			justify-content: center;
+			padding: 0.75rem;
+		}
 	}
 }
 
@@ -139,4 +175,29 @@
 
 .footer {
 	margin-top: auto;
+}
+
+.toggleButton {
+	display: flex;
+	align-items: center;
+	gap: 0.75rem;
+	width: 100%;
+	padding: 0.75rem 1rem;
+	border: none;
+	border-radius: 12px;
+	background: transparent;
+	color: #808191;
+	font-size: var(--font-size-sm);
+	font-weight: 500;
+	cursor: pointer;
+	transition: all 0.2s ease;
+
+	&:hover {
+		color: var(--color-white);
+		background-color: rgba(255, 255, 255, 0.05);
+	}
+}
+
+.toggleLabel {
+	white-space: nowrap;
 }
