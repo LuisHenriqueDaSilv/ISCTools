@@ -1,28 +1,20 @@
-.appContainer {
+.appLayout {
+  display: flex;
+  height: 100vh;
+  width: 100vw;
+  overflow: hidden;
+  background-color: var(--color-bg-page);
+}
+
+.mainContent {
+  flex: 1;
+  overflow-y: auto;
+  padding: 2rem;
   display: flex;
   flex-direction: column;
-  min-height: 100vh;
-  height: 100%;
-}
+  gap: 2rem;
 
-@media screen and (min-width: 768px) {
-  .appContainer {
-    flex-direction: row;
-  }
-}
-
-@media screen and (min-width: 1024px) {
-  .appContainer {
-    padding: 2rem;
-
-    .homeContainer {
-      gap: 8rem;
-
-      .bannerWrapper {
-        .bannerContainer {
-          gap: 5rem;
-        }
-      }
-    }
+  @media (min-width: 1024px) {
+    padding: 2.5rem;
   }
 }

@@ -1,21 +1,127 @@
-body {
-  flex: none;
-  background-color: #F7F7F7;
-  height: 100vh;
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+:root {
+  /* Colors - Accents */
+  --color-accent-lime: #C6F432;
+  --color-accent-purple: #6C5DD3;
+  --color-accent-black: #1F2128;
+
+  /* Colors - Primary Mapping */
+  --color-primary: var(--color-accent-purple);
+  /* Default primary action */
+  --color-primary-hover: #5843E8;
+  --color-cta: var(--color-accent-lime);
+
+  /* Colors - Background */
+  --color-bg-page: #F0F0F0;
+  /* Light Grey */
+  --color-bg-surface: #FFFFFF;
+  /* White Cards */
+  --color-sidebar-bg: #11142D;
+  /* Deep Black */
+
+  /* Colors - Text */
+  --color-text-title: #11142D;
+  /* Dark for light bg */
+  --color-text-body: #808191;
+  /* Grey for light bg */
+  --color-text-light: #B2B3BD;
+  --color-white: #FFFFFF;
+
+  /* Colors - Status */
+  --color-success: #C6F432;
+  /* Using Lime for success/growth */
+  --color-warning: #F59E0B;
+  --color-danger: #EF4444;
+
+  /* Borders & Shadows */
+  --border-radius-lg: 20px;
+  /* Slightly rounder for new aesthetic */
+  --border-radius-md: 12px;
+  --border-radius-sm: 8px;
+  --border-radius-pill: 9999px;
+
+  --border-color: #E4E4E4;
+
+  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.05);
+  --shadow-lg: 0 10px 20px rgba(0, 0, 0, 0.08);
+
+  /* Typography */
+  --font-family: 'Inter', sans-serif;
+
+  --font-size-xs: 0.75rem;
+  /* 12px */
+  --font-size-sm: 0.875rem;
+  /* 14px */
+  --font-size-base: 1rem;
+  /* 16px */
+  --font-size-lg: 1.125rem;
+  /* 18px */
+  --font-size-xl: 1.5rem;
+  /* 24px */
+  --font-size-2xl: 2rem;
+  /* 32px */
 }
 
 * {
-  font-family: "Poppins", serif;
-  padding: 0;
   margin: 0;
+  padding: 0;
   box-sizing: border-box;
-  font-size: 1.6rem;
-  font-weight: 400;
-  color: var(--tc);
 }
 
-:root {
-  font-size: 62.5%;
+body {
+  font-family: var(--font-family);
+  background-color: var(--color-bg-page);
+  color: var(--color-text-body);
+  font-size: var(--font-size-base);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
 
-  --gtc: #3E3737;
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  color: var(--color-text-title);
+  font-weight: 700;
+  line-height: 1.25;
+}
+
+h1 {
+  font-size: var(--font-size-2xl);
+  letter-spacing: -0.02em;
+}
+
+h2 {
+  font-size: var(--font-size-xl);
+  letter-spacing: -0.01em;
+}
+
+h3 {
+  font-size: var(--font-size-lg);
+}
+
+p {
+  line-height: 1.6;
+  margin-bottom: 1rem;
+}
+
+a {
+  color: var(--color-primary);
+  text-decoration: none;
+  transition: color 0.2s;
+
+  &:hover {
+    color: var(--color-primary-hover);
+  }
+}
+
+button {
+  cursor: pointer;
+  border: none;
+  background: none;
+  font-family: inherit;
 }

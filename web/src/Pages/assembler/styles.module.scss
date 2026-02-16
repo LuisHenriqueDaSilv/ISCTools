@@ -1,166 +1,69 @@
 .container {
-  margin-top: 5rem;
-  display: flex;
-  flex-direction: column;
-  gap: 3rem;
-  max-width: 900px;
-  margin-left: auto;
-  margin-right: auto;
-  width: 90%;
-  height: 100%;
-  margin-top: auto;
-  margin-bottom: auto;
-
-  header {
-    text-align: center;
-    display: flex;
-    flex-direction: column;
-    gap: 1.3rem;
-    max-width: 800px;
-    margin-left: auto;
-    margin-right: auto;
-
-    h1 {
-      color: var(--gtc);
-      font-weight: 700;
-      font-size: 3rem;
-    }
-  }
-
-  form {
-    display: flex;
-    flex-direction: column;
-    gap: 2rem;
-    width: 100%;
-
-    button {
-      transition: 200ms;
-      cursor: pointer;
-    }
-
-    button:hover {
-      opacity: 0.7;
-    }
-
-    div {
-      display: flex;
-      flex-direction: column;
-      width: 100%;
-
-
-      label {
-        font-size: 1.6rem;
-      }
-
-      input {
-        background: #FFFFFF;
-        border: 1px solid rgba(62, 55, 55, 0.4);
-        box-shadow: inset 0px 4px 4px rgba(0, 0, 0, 0.25);
-        border-radius: 10px;
-        height: 5rem;
-        padding-left: 2rem;
-      }
-
-      textarea {
-        background: #FFFFFF;
-        border: 1px solid rgba(62, 55, 55, 0.4);
-        box-shadow: inset 0px 4px 4px rgba(0, 0, 0, 0.25);
-        border-radius: 10px;
-        padding-left: 2rem;
-        resize: none;
-        padding: 2rem;
-
-        -webkit-box-sizing: border-box;
-        -moz-box-sizing: border-box;
-        box-sizing: border-box;
-      
-        width: 100%;
-      }
-
-      select {
-        height: 5rem;
-        border-radius: 10px;
-        padding-left: 2rem;
-
-
-        background: #FFFFFF;
-        border: 1px solid rgba(62, 55, 55, 0.4);
-        box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
-        border-radius: 10px;
-
-      }
-
-
-      .buttonsContainer {
-        display: flex;
-        flex-direction: row;
-
-        button {
-          width: 100%;
-          height: 5rem;
-          border: none;
-          border-radius: 0 10px 10px 0;
-        }
-
-        button:first-child {
-          border-radius: 10px 0 0 10px;
-        }
-
-        .selectedButton {
-          background-color: #1BA8F0;
-          color: #ffffff;
-        }
-      }
-
-    }
-
-    .submitButton {
-      font-weight: 700;
-      background-color: #7FD47F;
-      border: none;
-      border-radius: 10px;
-      height: 5rem;
-      color: #ffffff;
-      margin-top: auto;
-
-    }
-  }
-
-  .resultsContainer {
-    max-width: 800px;
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    text-align: left;
-
-    h1 {
-      margin-left: 2rem;
-      margin-right: auto;
-      font-weight: 800;
-      font-size: 2.5rem;
-      color: var(--gtc);
-    }
-  }
-
-
+  max-width: 800px;
+  margin: 0 auto;
+  width: 100%;
 }
 
-@media screen and (min-width: 768px) {
-  .container {
-    form {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      /* Máximo de 3 colunas */
-      justify-content: space-between;
-      /* Distribui os itens nas extremidades horizontais */
+.header {
+  margin-bottom: 2rem;
 
-
-      div:nth-child(1) {
-        grid-column: span 2;
-        margin-left: auto;
-        margin-right: auto;
-      }
-
-    }
+  h1 {
+    font-size: var(--font-size-2xl);
+    margin-bottom: 0.5rem;
+    color: var(--color-text-title);
   }
+
+  p {
+    color: var(--color-text-body);
+    font-size: var(--font-size-base);
+  }
+}
+
+.contentGrid {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.row {
+  display: flex;
+  gap: 1.5rem;
+  width: 100%;
+}
+
+.submitBtn {
+  width: 100%;
+  margin-top: 1rem;
+}
+
+.resultCard {
+  /* Styling handled by Card variant="result" */
+
+  label {
+    font-size: var(--font-size-sm);
+    opacity: 0.7;
+    display: block;
+    margin-bottom: 0.5rem;
+    color: var(--color-text-light);
+    /* Update to variable */
+  }
+}
+
+.resultList {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.codeLine {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: var(--font-size-base);
+  color: #ce9178;
+  /* reddish color for assembly/code */
 }

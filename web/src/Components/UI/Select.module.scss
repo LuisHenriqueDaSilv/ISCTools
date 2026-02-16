@@ -1,0 +1,52 @@
+.selectWrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    width: 100%;
+}
+
+.label {
+    font-size: var(--font-size-sm);
+    font-weight: 500;
+    color: var(--color-text-title);
+}
+
+.selectContainer {
+    position: relative;
+    width: 100%;
+}
+
+.select {
+    padding: 0.75rem 1rem;
+    padding-right: 2.5rem;
+    /* space for arrow */
+    border-radius: var(--border-radius-md);
+    border: 1px solid var(--border-color);
+    background-color: var(--color-bg-surface);
+    color: var(--color-text-body);
+    font-size: var(--font-size-base);
+    transition: all 0.2s ease;
+    width: 100%;
+    appearance: none;
+    /* Hide default arrow */
+    cursor: pointer;
+    background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2224%22%20height%3D%2224%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22%236B7280%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpolyline%20points%3D%226%209%2012%2015%2018%209%22%3E%3C%2Fpolyline%3E%3C%2Fsvg%3E");
+    background-repeat: no-repeat;
+    background-position: right 0.75rem center;
+    background-size: 1rem;
+
+    &:focus {
+        outline: none;
+        border-color: var(--color-primary);
+        box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.1);
+    }
+
+    &.error {
+        border-color: var(--color-danger);
+    }
+}
+
+.errorMessage {
+    font-size: var(--font-size-xs);
+    color: var(--color-danger);
+}
