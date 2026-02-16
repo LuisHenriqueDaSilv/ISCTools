@@ -10,15 +10,19 @@ import {
   Info,
   LayoutDashboard,
   PanelLeftClose,
-  PanelLeft
+  PanelLeft,
+  Moon,
+  Sun
 } from 'lucide-react';
 
 interface NavProps {
   collapsed: boolean;
   onToggleCollapsed: () => void;
+  isDarkMode: boolean;
+  onToggleDarkMode: () => void;
 }
 
-export default function Nav({ collapsed, onToggleCollapsed }: NavProps) {
+export default function Nav({ collapsed, onToggleCollapsed, isDarkMode, onToggleDarkMode }: NavProps) {
   const navItems = [
     { to: "/lamarzito", label: "Lamarzito-Tutor", icon: <Bot size={20} /> },
     { to: "/bases-numericas", label: "Bases Numéricas", icon: <Binary size={20} /> },
@@ -55,6 +59,16 @@ export default function Nav({ collapsed, onToggleCollapsed }: NavProps) {
       </div>
 
       <div className={styles.footer}>
+        <button
+          type="button"
+          className={styles.toggleButton}
+          onClick={onToggleDarkMode}
+          title={isDarkMode ? 'Desativar modo escuro' : 'Ativar modo escuro'}
+          aria-label={isDarkMode ? 'Desativar modo escuro' : 'Ativar modo escuro'}
+        >
+          {isDarkMode ? <Sun size={20} /> : <Moon size={20} />}
+          <span className={styles.toggleLabel}>{isDarkMode ? 'Modo claro' : 'Modo escuro'}</span>
+        </button>
         <button
           type="button"
           className={styles.toggleButton}

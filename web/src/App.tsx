@@ -1,5 +1,5 @@
 import 'react'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { createBrowserRouter, RouterProvider, Outlet } from 'react-router-dom'
 
 import styles from "./styles/AppStyles.module.scss"
@@ -13,12 +13,33 @@ import Nav from './Components/Nav'
 import Lamarzito from './Pages/Lamarzito'
 // import PNGConverter from './Pages/PngConverter'
 
+const THEME_KEY = 'theme'
+
+function getInitialDarkMode(): boolean {
+  if (typeof window === 'undefined') return false
+  const saved = localStorage.getItem(THEME_KEY)
+  if (saved) return saved === 'dark'
+  return window.matchMedia('(prefers-color-scheme: dark)').matches
+}
+
 const Layout = () => {
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false)
+  const [isDarkMode, setIsDarkMode] = useState(() => getInitialDarkMode())
+
+  useEffect(() => {
+    const theme = isDarkMode ? 'dark' : 'light'
+    document.documentElement.setAttribute('data-theme', theme)
+    localStorage.setItem(THEME_KEY, theme)
+  }, [isDarkMode])
 
   return (
     <div className={styles.appLayout}>
-      <Nav collapsed={sidebarCollapsed} onToggleCollapsed={() => setSidebarCollapsed((c) => !c)} />
+      <Nav
+        collapsed={sidebarCollapsed}
+        onToggleCollapsed={() => setSidebarCollapsed((c) => !c)}
+        isDarkMode={isDarkMode}
+        onToggleDarkMode={() => setIsDarkMode((d) => !d)}
+      />
       <main className={styles.mainContent}>
         <Outlet />
       </main>
