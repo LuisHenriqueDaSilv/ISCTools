@@ -1,4 +1,3 @@
-
 import styles from './styles.module.scss';
 import { NavLink } from 'react-router-dom';
 import {
@@ -9,10 +8,17 @@ import {
   FileCode,
   Package,
   Info,
-  LayoutDashboard
+  LayoutDashboard,
+  PanelLeftClose,
+  PanelLeft
 } from 'lucide-react';
 
-export default function Nav() {
+interface NavProps {
+  collapsed: boolean;
+  onToggleCollapsed: () => void;
+}
+
+export default function Nav({ collapsed, onToggleCollapsed }: NavProps) {
   const navItems = [
     { to: "/lamarzito", label: "Lamarzito-Tutor", icon: <Bot size={20} /> },
     { to: "/bases-numericas", label: "Bases Numéricas", icon: <Binary size={20} /> },
@@ -24,7 +30,7 @@ export default function Nav() {
   ];
 
   return (
-    <nav className={styles.sidebar}>
+    <nav className={`${styles.sidebar} ${collapsed ? styles.sidebarCollapsed : ''}`}>
       <div className={styles.logoContainer}>
         <div className={styles.logoIcon}>
           <LayoutDashboard size={24} color="#FFF" />
@@ -40,6 +46,7 @@ export default function Nav() {
             className={({ isActive }) =>
               `${styles.navItem} ${isActive ? styles.active : ''}`
             }
+            title={collapsed ? item.label : undefined}
           >
             <span className={styles.iconWrapper}>{item.icon}</span>
             <span className={styles.labelText}>{item.label}</span>
@@ -48,7 +55,16 @@ export default function Nav() {
       </div>
 
       <div className={styles.footer}>
-        {/* Placeholder for future user/settings */}
+        <button
+          type="button"
+          className={styles.toggleButton}
+          onClick={onToggleCollapsed}
+          title={collapsed ? 'Expandir barra lateral' : 'Encolher barra lateral'}
+          aria-label={collapsed ? 'Expandir barra lateral' : 'Encolher barra lateral'}
+        >
+          {collapsed ? <PanelLeft size={20} /> : <PanelLeftClose size={20} />}
+          <span className={styles.toggleLabel}>Encolher menu</span>
+        </button>
       </div>
     </nav>
   );
