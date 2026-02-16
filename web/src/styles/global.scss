@@ -64,6 +64,20 @@
   /* 32px */
 }
 
+/* Dark theme */
+[data-theme='dark'] {
+  --color-bg-page: #0f1117;
+  --color-bg-surface: #1a1d26;
+  --color-sidebar-bg: #0d0e14;
+  --color-text-title: #f0f0f2;
+  --color-text-body: #a0a2a8;
+  --color-text-light: #6b6d75;
+  --border-color: #2a2d36;
+  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.2);
+  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.25);
+  --shadow-lg: 0 10px 20px rgba(0, 0, 0, 0.3);
+}
+
 * {
   margin: 0;
   padding: 0;
