@@ -1,7 +1,12 @@
+
 import { useEffect, useState } from 'react'
 import styles from './styles.module.scss'
-
-import {converterBase} from '../../api/baseConverter'
+import { converterBase } from '../../api/baseConverter'
+// UI Components
+import { Card } from '../../Components/UI/Card'
+import { Input } from '../../Components/UI/Input'
+import { Select } from '../../Components/UI/Select'
+import { Button } from '../../Components/UI/Button'
 
 export default function BasesNumericas() {
 
@@ -13,7 +18,7 @@ export default function BasesNumericas() {
   const [precision, setPrecision] = useState('8')
   const [result, setResult] = useState('')
 
-  function convert(event: FormDataEvent) {
+  function convert(event: React.FormEvent) {
     event.preventDefault()
     try {
       const result = converterBase(originalNumber.toUpperCase().trim(), parseInt(base), parseInt(targetBase), originComp, targetComp, parseInt(precision))
@@ -24,117 +29,119 @@ export default function BasesNumericas() {
   }
 
   useEffect(() => {
-    setTimeout(() => {
-      window.scrollTo({
-        top: document.body.scrollHeight,
-        behavior: 'smooth', // Define a rolagem suave
-      });
-    }, 100)
+    // Optional: auto-scroll or focus could go here
   }, [])
+
+  // Helper to generate options
+  const baseOptions = Array.from({ length: 35 }, (_, i) => ({
+    value: i + 2,
+    label: (i + 2).toString()
+  }));
+
+  const precisionOptions = Array.from({ length: 32 }, (_, i) => ({
+    value: i + 1,
+    label: (i + 1).toString()
+  }));
 
   return (
     <div className={styles.container}>
-
       <header className={styles.header}>
-        <h1>conversor de bases numéricas (Numeros inteiros)</h1>
+        <h1>Conversor de Bases Numéricas</h1>
         <p>
-          Esta calculadora permite converter números de uma base numérica para outra de forma simples e eficiente. Para utilizá-la,
-          insira o número que deseja converter, a base na qual ele está representado e a base para a qual deseja convertê-lo.
+          Converta números inteiros e fracionários entre diferentes bases (binário, octal, decimal, hexadecimal e mais).
         </p>
       </header>
 
-      {/*@ts-ignore*/}
-      <form onSubmit={convert}>
+      <div className={styles.contentGrid}>
+        <Card className={styles.formCard}>
+          <form onSubmit={convert} className={styles.form}>
+            <div className={styles.row}>
+              <Input
+                label="Número Original"
+                value={originalNumber}
+                onChange={(e) => setOriginalNumber(e.target.value)}
+                placeholder="Ex: 1010, A1F, 255"
+              />
+            </div>
 
-        <div>
-          <label>numero original:</label>
-          <input
-            type="text"
-            onChange={(event) => setOriginalNumber(event.target.value)}
-            value={originalNumber}
-          />
-        </div>
+            <div className={styles.row}>
+              <Select
+                label="Base Origem"
+                value={base}
+                onChange={(e) => setBase(e.target.value)}
+                options={baseOptions}
+              />
+              <Select
+                label="Base Destino"
+                value={targetBase}
+                onChange={(e) => setTargetBase(e.target.value)}
+                options={baseOptions}
+              />
+            </div>
 
-        <div>
-          <label>base:</label>
+            <div className={styles.row}>
+              <div className={styles.toggleGroup}>
+                <label>Origem em Complemento?</label>
+                <div className={styles.toggles}>
+                  <Button
+                    type="button"
+                    variant={!originComp ? 'secondary' : 'ghost'}
+                    className={!originComp ? styles.activeToggle : ''}
+                    onClick={() => setOriginComp(false)}
+                    size="sm"
+                  >Não</Button>
+                  <Button
+                    type="button"
+                    variant={originComp ? 'secondary' : 'ghost'}
+                    className={originComp ? styles.activeToggle : ''}
+                    onClick={() => setOriginComp(true)}
+                    size="sm"
+                  >Sim</Button>
+                </div>
+              </div>
 
-          <select
-            onChange={(choice) => setBase(choice.target.value)}
-            value={base}
-          >
-            {Array.from({ length: 35 }, (_, i) => (
-              <option key={i + 2} value={i + 2}>
-                {i + 2}
-              </option>
-            ))}
-          </select>
-        </div>
+              <div className={styles.toggleGroup}>
+                <label>Resultado em Complemento?</label>
+                <div className={styles.toggles}>
+                  <Button
+                    type="button"
+                    variant={!targetComp ? 'secondary' : 'ghost'}
+                    className={!targetComp ? styles.activeToggle : ''}
+                    onClick={() => setTargetComp(false)}
+                    size="sm"
+                  >Não</Button>
+                  <Button
+                    type="button"
+                    variant={targetComp ? 'secondary' : 'ghost'}
+                    className={targetComp ? styles.activeToggle : ''}
+                    onClick={() => setTargetComp(true)}
+                    size="sm"
+                  >Sim</Button>
+                </div>
+              </div>
+            </div>
 
-        <div>
-          <label>base destino:</label>
-          <select
-            onChange={(event) => setTargetBase(event.target.value)}
-            value={targetBase}
-          >
-            {Array.from({ length: 35 }, (_, i) => (
-              <option key={i + 2} value={i + 2}>
-                {i + 2}
-              </option>
-            ))}
-          </select>
-        </div>
+            <div className={styles.row}>
+              <Select
+                label="Precisão do Resultado"
+                value={precision}
+                onChange={(e) => setPrecision(e.target.value)}
+                options={precisionOptions}
+              />
+            </div>
 
-        <div>
-          <label>origem em complemento?</label>
-          <div className={styles.buttonsContainer}>
-            <button
-              type="button"
-              onClick={() => { setOriginComp(false) }}
-              className={originComp ? '' : styles.selectedButton}
-            >não</button>
-            <button
-              type="button"
-              className={originComp ? styles.selectedButton : ''}
-              onClick={() => { setOriginComp(true) }}
-            >sim</button>
+            <Button type="submit" size="lg" className={styles.submitBtn}>
+              Converter
+            </Button>
+          </form>
+        </Card>
 
-          </div>
-        </div>
-        <div>
-          <label>resultado em complemento?</label>
-          <div className={styles.buttonsContainer}>
-            <button
-              type="button"
-              onClick={() => { setTargetComp(false) }}
-              className={targetComp ? '' : styles.selectedButton}
-            >não</button>
-            <button
-              type="button"
-              className={targetComp ? styles.selectedButton : ''}
-              onClick={() => { setTargetComp(true) }}
-            >sim</button>
-          </div>
-        </div>
-        <div>
-          <label>precisao do resultado:</label>
-          <select
-            onChange={(event) => setPrecision(event.target.value)}
-            value={precision}
-          >
-            {Array.from({ length: 32 }, (_, i) => (
-              <option key={i + 1} value={i + 1}>
-                {i + 1}
-              </option>
-            ))}
-          </select>
-        </div>
-
-        <button className={styles.submitButton} type="submit">converter</button>
-      </form>
-
-      <div className={styles.resultsContainer}>
-        <label>resultado:</label>
-        <h1>{result}</h1>
+        {result && (
+          <Card className={styles.resultCard} variant="result">
+            <label>Resultado</label>
+            <div className={styles.resultValue}>{result}</div>
+          </Card>
+        )}
       </div>
     </div>
   )

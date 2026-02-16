@@ -1,52 +1,55 @@
-import styles from './styles.module.scss'
 
-export default function Nav(){
-    return (
-        <div className={styles.navContainer}>
+import styles from './styles.module.scss';
+import { NavLink } from 'react-router-dom';
+import {
+  Bot,
+  Binary,
+  Cpu,
+  Zap,
+  FileCode,
+  Package,
+  Info,
+  LayoutDashboard
+} from 'lucide-react';
 
-        <a href="/bases-numericas">
-          <div>
-            <img alt="icon 0b>0x" src="0b_0x.png"></img>
-            <p>bases numéricas</p>
-          </div>
-        </a>
-        <a href="/ieee754">
-          <div>
-            <img alt="icon 0b>0x" src="0b_0x.png"></img>
-            <p>IEEE754</p>
-          </div>
-        </a>
-        <a href="/immediato">
-          <div>
-            <img alt="icon 0b>0x" src="0b_0x.png"></img>
-            <p>Immediato</p>
-          </div>
-        </a>
-        <a href="/disassembler">
-          <div>
-            <img alt="icon 0b>0x" src="0b_0x.png"></img>
-            <p>Disassembler</p>
-          </div>
-        </a>
-        {/* <a href="/png-to-data">
-          <div>
-            <img alt="icon 0b>0x" src="0b_0x.png"></img>
-            <p>PNG para .data</p>
-          </div>
-        </a> */}
-        <a href="/assembler">
-          <div>
-            <img alt="icon 0b>0x" src="0b_0x.png"></img>
-            <p>Assembler</p>
-          </div>
-        </a>
-        <a href="/sobre">
-          <div>
-            <img alt="icon 0b>0x" src="0b_0x.png"></img>
-            <p>sobre</p>
-          </div>
-        </a>
+export default function Nav() {
+  const navItems = [
+    { to: "/lamarzito", label: "Lamarzito-Tutor", icon: <Bot size={20} /> },
+    { to: "/bases-numericas", label: "Bases Numéricas", icon: <Binary size={20} /> },
+    { to: "/ieee754", label: "IEEE754", icon: <Cpu size={20} /> },
+    { to: "/immediato", label: "Immediato", icon: <Zap size={20} /> },
+    { to: "/disassembler", label: "Disassembler", icon: <FileCode size={20} /> },
+    { to: "/assembler", label: "Assembler", icon: <Package size={20} /> },
+    { to: "/sobre", label: "Sobre", icon: <Info size={20} /> },
+  ];
 
+  return (
+    <nav className={styles.sidebar}>
+      <div className={styles.logoContainer}>
+        <div className={styles.logoIcon}>
+          <LayoutDashboard size={24} color="#FFF" />
+        </div>
+        <span className={styles.logoText}>ISCTools</span>
       </div>
-    )
+
+      <div className={styles.navLinks}>
+        {navItems.map((item) => (
+          <NavLink
+            key={item.to}
+            to={item.to}
+            className={({ isActive }) =>
+              `${styles.navItem} ${isActive ? styles.active : ''}`
+            }
+          >
+            <span className={styles.iconWrapper}>{item.icon}</span>
+            <span className={styles.labelText}>{item.label}</span>
+          </NavLink>
+        ))}
+      </div>
+
+      <div className={styles.footer}>
+        {/* Placeholder for future user/settings */}
+      </div>
+    </nav>
+  );
 }

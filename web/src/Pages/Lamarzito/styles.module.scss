@@ -1,0 +1,98 @@
+.container {
+    max-width: 800px;
+    margin: 0 auto;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+}
+
+/* Donation Card */
+.donationCard {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 2rem;
+    background: linear-gradient(135deg, #ffffff 0%, #f3f4f6 100%);
+
+    @media (max-width: 768px) {
+        flex-direction: column;
+        text-align: center;
+    }
+}
+
+.header {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    flex: 1;
+
+    @media (max-width: 640px) {
+        flex-direction: column;
+    }
+}
+
+.lamarzitoIcon {
+    width: 80px;
+    height: auto;
+    border-radius: 50%;
+    box-shadow: var(--shadow-sm);
+}
+
+.infos {
+    h1 {
+        font-size: var(--font-size-xl);
+        color: var(--color-text-title);
+        margin-bottom: 0.5rem;
+    }
+
+    p {
+        font-size: var(--font-size-sm);
+        color: var(--color-text-body);
+        margin-bottom: 0.25rem;
+        line-height: 1.4;
+    }
+}
+
+.qrCodeContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.qrCode {
+    width: 120px;
+    height: 120px;
+    border-radius: var(--border-radius-md);
+    border: 1px solid var(--border-color);
+    padding: 0.5rem;
+    background: white;
+}
+
+.scanText {
+    font-size: var(--font-size-xs);
+    color: var(--color-text-light);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    font-weight: 500;
+}
+
+/* Chat Card */
+.chatCard {
+    min-height: 400px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 2px dashed var(--border-color);
+    background: transparent;
+}
+
+.chatPlaceholder {
+    text-align: center;
+    opacity: 0.5;
+
+    h3 {
+        margin-bottom: 0.5rem;
+    }
+}

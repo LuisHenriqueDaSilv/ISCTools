@@ -1,99 +1,95 @@
-import { useEffect, useLayoutEffect, useRef, useState } from 'react';
+
+import { useLayoutEffect, useRef, useState } from 'react';
 import styles from './styles.module.scss'
 import { assembler } from '../../api/assembler';
+import { Card } from '../../Components/UI/Card'
+import { Select } from '../../Components/UI/Select'
+import { Button } from '../../Components/UI/Button'
+import { Textarea } from '../../Components/UI/Textarea'
 
 export default function Assembler() {
 
   const [instructions, setInstructions] = useState('');
   const [base, setBase] = useState('2');
   const [result, setResult] = useState<string[]>([]);
-
-  const textbox = useRef(null);
+  const textbox = useRef<HTMLTextAreaElement>(null);
 
   function adjustHeight() {
-    //@ts-ignore
-    textbox.current.style.height = "inherit";
-    //@ts-ignore
-    textbox.current.style.height = `${textbox.current.scrollHeight}px`;
+    if (textbox.current) {
+      textbox.current.style.height = "inherit";
+      textbox.current.style.height = `${textbox.current.scrollHeight}px`;
+    }
   }
 
-  useLayoutEffect(adjustHeight, []);
+  useLayoutEffect(() => {
+    adjustHeight();
+  }, []);
 
-  function handleKeyDown(event: any) {
+  function handleKeyDown(event: React.ChangeEvent<HTMLTextAreaElement>) {
     setInstructions(event.target.value)
     adjustHeight();
   }
 
-  useEffect(() => {
-    setTimeout(() => {
-      window.scrollTo({
-        top: document.body.scrollHeight,
-        behavior: 'smooth',
-      });
-    }, 100)
-  }, [])
-
-  function convert(event: FormDataEvent) {
+  function convert(event: React.FormEvent) {
     event.preventDefault()
     const ans = assembler(instructions, parseInt(base))
     setResult(ans)
   }
 
+  const baseOptions = [
+    { value: 2, label: '2 (Binário)' },
+    { value: 16, label: '16 (Hexadecimal)' }
+  ];
+
   return (
     <div className={styles.container}>
 
       <header className={styles.header}>
-        <h1>Assembler</h1>
+        <h1>Assembler RISC-V</h1>
         <p>
-          Esta ferramenta permite converter código Assembly RISC-V para linguagem de máquina de forma simples e eficiente. Para utilizá-la, 
-          insira a instrução Assembly que deseja converter, incluindo os registradores e valores imediatos. O assembler gerará automaticamente 
-          o código binário correspondente, pronto para ser executado em um processador compatível com a ISA RISC-V.
+          Converta Assembly RISC-V para código de máquina.
         </p>
       </header>
 
-      {/* @ts-ignore*/}
-      <form onSubmit={convert}>
+      <div className={styles.contentGrid}>
+        <Card className={styles.formCard}>
+          <form onSubmit={convert} className={styles.form}>
+            <div className={styles.row}>
+              <Select
+                label="Base do Resultado"
+                value={base}
+                onChange={(e) => setBase(e.target.value)}
+                options={baseOptions}
+              />
+            </div>
 
-        <div>
-          <label>instruções (Uma por linha):</label>
-          <div>
+            <div className={styles.row}>
+              <Textarea
+                ref={textbox}
+                label="Instruções Assembly (Uma por linha)"
+                onChange={handleKeyDown}
+                placeholder="Ex: add t1, t2, t3"
+                style={{ minHeight: '200px' }}
+              />
+            </div>
 
-            <textarea
-              ref={textbox}
-              onChange={handleKeyDown}
-            />
-          </div>
-        </div>
+            <Button type="submit" size="lg" className={styles.submitBtn}>
+              Gerar Código de Máquina
+            </Button>
+          </form>
+        </Card>
 
-        <div>
-          <label>base do resultado:</label>
-          <select
-            onChange={(event) => setBase(event.target.value)}
-            value={base}
-          >
-              <option key={2} value={2}>
-                2
-              </option>
-              <option key={16} value={16}>
-                16
-              </option>
-          </select>
-        </div>
-
-        <button className={styles.submitButton} type="submit">gerar códigos</button>
-      </form>
-
-      <div className={styles.resultsContainer}>
-        <label>resultado:</label>
-        {
-          result.map((line) => {
-            return (
-              <h1>{line}</h1>
-            )
-          })
-        }
+        {result.length > 0 && (
+          <Card className={styles.resultCard} variant="result">
+            <label>Resultado</label>
+            <div className={styles.resultList}>
+              {result.map((line, index) => (
+                <div key={index} className={styles.codeLine}>{line}</div>
+              ))}
+            </div>
+          </Card>
+        )}
       </div>
-
     </div>
   )
 }

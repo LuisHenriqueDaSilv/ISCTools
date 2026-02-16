@@ -1,0 +1,43 @@
+.card {
+    background-color: var(--color-bg-surface);
+    border-radius: var(--border-radius-lg);
+    box-shadow: var(--shadow-sm);
+    padding: 1.5rem;
+    transition: box-shadow 0.2s ease-in-out;
+    color: var(--color-text-title);
+    border: none;
+
+    &:hover {
+        box-shadow: var(--shadow-md);
+    }
+
+    /* Rename .dark to .result to verify semantic usage */
+    &.result {
+        background-color: var(--color-bg-surface);
+        /* White background per request */
+        color: var(--color-text-title);
+        /* Dark text */
+        border: 1px solid var(--border-color);
+        /* Subtle border for definition */
+
+        label {
+            color: var(--color-text-body);
+            font-size: var(--font-size-sm);
+            margin-bottom: 0.5rem;
+            display: block;
+            font-weight: 500;
+        }
+
+        /* Enforce uniform big font size for results */
+        .resultValue,
+        .codeLine,
+        div {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 1.25rem;
+            /* Matches Assembler size */
+            color: var(--color-text-title);
+            white-space: pre-wrap;
+            word-break: break-all;
+        }
+    }
+}

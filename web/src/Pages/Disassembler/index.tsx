@@ -1,98 +1,96 @@
-import { useEffect, useLayoutEffect, useRef, useState } from 'react';
+
+import { useLayoutEffect, useRef, useState } from 'react';
 import styles from './styles.module.scss'
 import { disassembler } from '../../api/disassembler';
+import { Card } from '../../Components/UI/Card'
+import { Select } from '../../Components/UI/Select'
+import { Button } from '../../Components/UI/Button'
+import { Textarea } from '../../Components/UI/Textarea'
 
 export default function Disassembler() {
 
   const [instructions, setInstructions] = useState('');
   const [base, setBase] = useState('2');
   const [result, setResult] = useState<string[]>([]);
-
-  const textbox = useRef(null);
+  const textbox = useRef<HTMLTextAreaElement>(null);
 
   function adjustHeight() {
-    //@ts-ignore
-    textbox.current.style.height = "inherit";
-    //@ts-ignore
-    textbox.current.style.height = `${textbox.current.scrollHeight}px`;
+    if (textbox.current) {
+      textbox.current.style.height = "inherit";
+      textbox.current.style.height = `${textbox.current.scrollHeight}px`;
+    }
   }
 
-  useLayoutEffect(adjustHeight, []);
+  useLayoutEffect(() => {
+    adjustHeight();
+  }, []);
 
-  function handleKeyDown(event: any) {
+  function handleKeyDown(event: React.ChangeEvent<HTMLTextAreaElement>) {
     setInstructions(event.target.value)
     adjustHeight();
   }
 
-  useEffect(() => {
-    setTimeout(() => {
-      window.scrollTo({
-        top: document.body.scrollHeight,
-        behavior: 'smooth',
-      });
-    }, 100)
-  }, [])
-
-  function convert(event: FormDataEvent) {
+  function convert(event: React.FormEvent) {
     event.preventDefault()
     const ans = disassembler(instructions, parseInt(base))
     setResult(ans)
   }
 
+  const baseOptions = Array.from({ length: 35 }, (_, i) => ({
+    value: i + 2,
+    label: (i + 2).toString()
+  }));
+
   return (
     <div className={styles.container}>
 
       <header className={styles.header}>
-        <h1>Disassembler</h1>
+        <h1>Disassembler RISC-V</h1>
         <p>
-          Esta ferramenta permite converter código de máquina RISC-V em instruções legíveis de Assembly de forma simples e eficiente.
-          Para utilizá-la, insira o código binário ou hexadecimal que deseja decodificar, e o disassembler transformará automaticamente
-          os dados em instruções Assembly correspondentes, facilitando a análise e compreensão do funcionamento do programa.
+          Decodifique código de máquina (binário ou hexadecimal) para instruções RISC-V Assembly.
         </p>
       </header>
 
-      {/* @ts-ignore*/}
-      <form onSubmit={convert}>
+      <div className={styles.contentGrid}>
+        <Card className={styles.formCard}>
+          <form onSubmit={convert} className={styles.form}>
 
-        <div>
-          <label>instruções (Uma por linha):</label>
-          <div>
+            <div className={styles.row}>
+              <Select
+                label="Base das Instruções"
+                value={base}
+                onChange={(e) => setBase(e.target.value)}
+                options={baseOptions}
+              />
+            </div>
 
-            <textarea
-              ref={textbox}
-              onChange={handleKeyDown}
-            />
-          </div>
-        </div>
+            <div className={styles.row}>
+              <Textarea
+                ref={textbox}
+                label="Instruções (Uma por linha)"
+                onChange={handleKeyDown}
+                placeholder="Ex: 00000000000100000000000010010011"
+                style={{ minHeight: '200px' }}
+              />
+            </div>
 
-        <div>
-          <label>base das instruções:</label>
-          <select
-            onChange={(event) => setBase(event.target.value)}
-            value={base}
-          >
-            {Array.from({ length: 35 }, (_, i) => (
-              <option key={i + 2} value={i + 2}>
-                {i + 2}
-              </option>
-            ))}
-          </select>
-        </div>
+            <Button type="submit" size="lg" className={styles.submitBtn}>
+              Gerar Assembly
+            </Button>
+          </form>
+        </Card>
 
-        <button className={styles.submitButton} type="submit">gerar códigos</button>
-      </form>
-
-      <div className={styles.resultsContainer}>
-        <label>resultado:</label>
-        {
-          result.map((line) => {
-            return (
-              <h1>{line}</h1>
-            )
-          })
-        }
+        {result.length > 0 && (
+          <Card className={styles.resultCard} variant="result">
+            <label>Resultado</label>
+            <div className={styles.resultList}>
+              {result.map((line, index) => (
+                <div key={index} className={styles.codeLine}>{line}</div>
+              ))}
+            </div>
+          </Card>
+        )}
       </div>
-
     </div>
   )
 }

@@ -1,65 +1,71 @@
+
 import { useEffect } from 'react';
 import styles from './styles.module.scss'
+import { Card } from '../../Components/UI/Card'
+import { Button } from '../../Components/UI/Button'
+import { Github, Linkedin, Instagram } from 'lucide-react'
 
 export default function About() {
 
   useEffect(() => {
-    setTimeout(() => {
-      window.scrollTo({
-        top: document.body.scrollHeight,
-        behavior: 'smooth',
-      });
-    }, 100)
+    // Optional: focus or scroll
   }, [])
 
   return (
-    <div className={styles.bannerWrapper}>
-      <div className={styles.bannerContainer}>
-        <img className={styles.person} alt="personagem cartoon" src="/lamar1.png" />
-        <div className={styles.infosContainer}>
-          <article>
+    <div className={styles.container}>
+      <Card className={styles.contentCard}>
+        <div className={styles.header}>
+          <img className={styles.avatar} alt="Lamarzito" src="/lamar1.png" />
+          <div className={styles.titleSection}>
             <h1>ISC TOOLS</h1>
-            <p>
-              <strong>Feito por alunos e para alunos</strong>, o ISC Tools é o seu aliado nos desafios da matéria de Introdução aos Sistemas
-              Computacionais (ISC) da UnB! Aqui você encontra calculadoras e conversores para tornar os estudos mais práticos e dinâmicos.
-            </p>
-            <p>
-              <strong>Mas atenção! Este site não é oficial</strong> e não tem qualquer vínculo com a UnB. O ISC Tools é uma iniciativa independente, criada para
-              ajudar nos seus estudos, mas nunca para substituir o aprendizado. Nosso objetivo é facilitar a jornada, não pular etapas.
-              É fundamental entender os conceitos e o “porquê” de cada conversão — afinal, nada substitui a boa e velha prática!
-            </p>
-            <p>
-              Aproveite as ferramentas, estude com responsabilidade e siga firme no caminho do conhecimento! 🚀
-            </p>
-          </article>
+            <span className={styles.subtitle}>Feito por alunos, para alunos.</span>
+          </div>
+        </div>
 
-          <section className={styles.devContainer}>
-            <h2>Desenvolvido e mantido por</h2>
-            <div className={styles.colaboradorCard}>
-              <img src="/luissilva.png" alt="Luis Silva" className={styles.avatar} />
+        <article className={styles.article}>
+          <p>
+            O <strong>ISC Tools</strong> é o seu aliado nos desafios da matéria de Introdução aos Sistemas
+            Computacionais (ISC) da UnB! Aqui você encontra calculadoras e conversores para tornar os estudos mais práticos e dinâmicos.
+          </p>
+          <div className={styles.alertBox}>
+            <strong>⚠️ Nota Importante:</strong> Este site não é oficial e não tem vínculo com a UnB.
+            É uma iniciativa independente para facilitar a jornada, não para substituir o aprendizado.
+          </div>
+          <p>
+            Aproveite as ferramentas, estude com responsabilidade e siga firme no caminho do conhecimento! 🚀
+          </p>
+        </article>
+
+        <div className={styles.divider} />
+
+        <section className={styles.devSection}>
+          <h2>Desenvolvido por</h2>
+
+          <div className={styles.profile}>
+            <img src="/luissilva.png" alt="Luis Silva" className={styles.devAvatar} />
+            <div className={styles.devInfo}>
               <h4>Luis Silva</h4>
-              <div className={styles.socialIcons}>
+              <div className={styles.socialLinks}>
                 <a href="https://github.com/LuisHenriqueDaSilv" target="_blank" rel="noopener noreferrer">
-                  <img src="/github.svg" alt="GitHub" />
+                  <Button variant="ghost" size="sm">
+                    <Github size={18} style={{ marginRight: '0.5rem' }} /> GitHub
+                  </Button>
                 </a>
                 <a href="https://www.linkedin.com/in/luishenriquedasilv" target="_blank" rel="noopener noreferrer">
-                  <img src="/linkedin.svg" alt="LinkedIn" />
+                  <Button variant="ghost" size="sm">
+                    <Linkedin size={18} style={{ marginRight: '0.5rem' }} /> LinkedIn
+                  </Button>
                 </a>
                 <a href="https://www.instagram.com/luishenri.silva/" target="_blank" rel="noopener noreferrer">
-                  <img src="/instagram.svg" alt="Instagram" />
+                  <Button variant="ghost" size="sm">
+                    <Instagram size={18} style={{ marginRight: '0.5rem' }} /> Instagram
+                  </Button>
                 </a>
               </div>
             </div>
-            {/* <div className={styles.networkContainer}>
-              <a href='https://www.linkedin.com/in/luishenriquedasilv' target='_blank'><img src="/linkedin.png" alt="aedin" /></a>
-              <a href='https://github.com/LuisHenriqueDaSilv' target='_blank'><img src="/github.png" alt="github" /></a>
-              <a href='https://www.instagram.com/luishenri.silva/' target='_blank'><img src="/instagram.png" alt="instagram" /></a>
-            </div> */}
-          </section>
-
-        </div>
-      </div>
+          </div>
+        </section>
+      </Card>
     </div>
   )
-
 }
