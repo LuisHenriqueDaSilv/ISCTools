@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { lamarzitoAgent } from "@/services/LamarzitoAgent";
+import { getLamarzitoAgent } from "@/services/LamarzitoAgent";
 
 export async function POST(req: NextRequest) {
   try {
@@ -9,7 +9,8 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "Message is required" }, { status: 400 });
     }
 
-    const answer = await lamarzitoAgent.chat(message, history || []);
+    const agent = await getLamarzitoAgent();
+    const answer = await agent.chat(message, history || []);
 
     return NextResponse.json({ answer });
   } catch (error: any) {

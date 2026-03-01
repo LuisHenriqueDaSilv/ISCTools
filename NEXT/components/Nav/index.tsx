@@ -1,7 +1,7 @@
 "use client";
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { Binary, Cpu, Calculator, Hash, Info, FileCode, Bot } from 'lucide-react';
+import { Binary, Cpu, Calculator, Hash, Info, FileCode, Bot, GraduationCap } from 'lucide-react';
 import styles from './styles.module.scss'
 
 export default function Nav(){
@@ -17,6 +17,13 @@ export default function Nav(){
                 <div className={styles.navItem}>
                     <Bot />
                     <p>Lamarzito</p>
+                </div>
+            </Link>
+
+            <Link href="/lamarzito-tutor" className={isActive('/lamarzito-tutor') ? styles.active : ''}>
+                <div className={styles.navItem}>
+                    <GraduationCap />
+                    <p>Lamarzito-Tutor</p>
                 </div>
             </Link>
 

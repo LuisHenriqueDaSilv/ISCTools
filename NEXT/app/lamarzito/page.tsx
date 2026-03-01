@@ -79,7 +79,7 @@ export default function LamarzitoPage() {
       console.error('Error fetching AI response:', error);
       const errorMessage: Message = {
         id: (Date.now() + 1).toString(),
-        text: 'Desculpe, tive um problema ao processar sua pergunta. O servidor do ChromaDB está ativo?',
+        text: 'Desculpe, tive um problema ao processar sua pergunta. Verifique se o índice do conteúdo foi criado (npm run populate-rag).',
         sender: 'ai',
         timestamp: new Date(),
       };

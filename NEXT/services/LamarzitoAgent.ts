@@ -1,9 +1,11 @@
 import { z } from "zod";
+import type { VectorStore } from "@langchain/core/vectorstores";
 import { ChatGoogleGenerativeAI, GoogleGenerativeAIEmbeddings } from "@langchain/google-genai";
 import { TaskType } from "@google/generative-ai";
-import { Chroma } from "@langchain/community/vectorstores/chroma";
+import { HNSWLib } from "@langchain/community/vectorstores/hnswlib";
 import { StateGraph, END, START } from "@langchain/langgraph";
 import { HumanMessage, SystemMessage, AIMessage, BaseMessage } from "@langchain/core/messages";
+import { getVectorStorePath } from "@/lib/vectorStore";
 
 // --- DEFINIÇÃO DO ESTADO ---
 interface AgentState {
@@ -17,34 +19,39 @@ interface AgentState {
 
 export class LamarzitoAgent {
   private llm: ChatGoogleGenerativeAI;
-  private embeddings: GoogleGenerativeAIEmbeddings;
-  private vectorStore: Chroma;
+  private vectorStore: VectorStore;
   private workflow: any;
 
-  constructor() {
-    const apiKey = process.env.GEMINI_API_KEY;
+  private constructor(vectorStore: VectorStore, llm: ChatGoogleGenerativeAI) {
+    this.llm = llm;
+    this.vectorStore = vectorStore;
+    this.setupWorkflow();
+  }
 
-    // --- CONFIGURAÇÃO LLM ---
-    this.llm = new ChatGoogleGenerativeAI({
-      model: "gemini-2.5-flash", 
+  /** Cria o agente carregando o vector store a partir do disco (assíncrono). */
+  static async create(): Promise<LamarzitoAgent> {
+    const apiKey = process.env.GEMINI_API_KEY;
+    const llm = new ChatGoogleGenerativeAI({
+      model: "gemini-2.5-flash",
       temperature: 0.5,
       maxRetries: 2,
       apiKey: apiKey,
     });
-
-    // --- CONFIGURAÇÃO DO VECTOR STORE ---
-    this.embeddings = new GoogleGenerativeAIEmbeddings({
-      model: "models/text-embedding-004",
+    const embeddings = new GoogleGenerativeAIEmbeddings({
+      model: "models/gemini-embedding-001",
       taskType: TaskType.RETRIEVAL_QUERY,
       apiKey: apiKey,
     });
-
-    this.vectorStore = new Chroma(this.embeddings, {
-      collectionName: "arquitetura_computadores",
-      url: process.env.CHROMA_URL || "http://localhost:8000",
-    });
-
-    this.setupWorkflow();
+    let vectorStore: VectorStore;
+    try {
+      vectorStore = await HNSWLib.load(getVectorStorePath(), embeddings);
+    } catch (err) {
+      console.error("Erro ao carregar o vector store (execute npm run populate-rag primeiro):", err);
+      throw new Error(
+        "O índice do conteúdo da disciplina não foi encontrado. Execute 'npm run populate-rag' e tente novamente."
+      );
+    }
+    return new LamarzitoAgent(vectorStore, llm);
   }
 
   private setupWorkflow() {
@@ -124,7 +131,7 @@ export class LamarzitoAgent {
       const docsContent = results.map(doc => doc.pageContent);
       return { context: docsContent };
     } catch (error) {
-      console.error("❌ Erro ao conectar no Chroma:", error);
+      console.error("❌ Erro ao buscar no vector store:", error);
       return { context: [] };
     }
   }
@@ -240,4 +247,10 @@ export class LamarzitoAgent {
   }
 }
 
-export const lamarzitoAgent = new LamarzitoAgent();
+let agentInstance: Promise<LamarzitoAgent> | null = null;
+
+/** Obtém o LamarzitoAgent (carrega o vector store uma vez e reutiliza). */
+export async function getLamarzitoAgent(): Promise<LamarzitoAgent> {
+  if (!agentInstance) agentInstance = LamarzitoAgent.create();
+  return agentInstance;
+}

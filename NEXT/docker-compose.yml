@@ -1,0 +1,40 @@
+# PostgreSQL + Prisma Migrate para o Lamarzito-Tutor.
+# Uso: docker compose up -d
+# O serviço "migrate" corre após o Postgres estar saudável e aplica as migrações.
+# Para a app Next.js, use no .env: DATABASE_URL=postgresql://lamarzito:lamarzito_secret@localhost:5432/lamarzito
+
+services:
+  db:
+    image: postgres:16-alpine
+    container_name: lamarzito-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: lamarzito
+      POSTGRES_PASSWORD: lamarzito_secret
+      POSTGRES_DB: lamarzito
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U lamarzito -d lamarzito"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  migrate:
+    image: node:20-alpine
+    container_name: lamarzito-migrate
+    working_dir: /app
+    environment:
+      DATABASE_URL: postgresql://lamarzito:lamarzito_secret@db:5432/lamarzito
+    volumes:
+      - .:/app
+      - /app/node_modules
+    command: sh -c "npm ci --legacy-peer-deps 2>/dev/null || npm install --legacy-peer-deps && npx prisma migrate deploy"
+    depends_on:
+      db:
+        condition: service_healthy
+
+volumes:
+  postgres_data:
