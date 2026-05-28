@@ -15,8 +15,10 @@ import {
   Moon,
   Sun,
   Menu,
-  X
+  X,
+  LogOut,
 } from 'lucide-react';
+import { useAuth } from '../../contexts/AuthContext';
 
 interface NavProps {
   collapsed: boolean;
@@ -34,6 +36,40 @@ const navItems = [
   { to: '/assembler', label: 'Assembler', icon: <Package size={20} /> },
   { to: '/sobre', label: 'Sobre', icon: <Info size={20} /> },
 ];
+
+function UserSection({ collapsed }: { collapsed?: boolean }) {
+  const { user, logout } = useAuth();
+  if (!user) return null;
+
+  const initials = user.name
+    ? user.name.split(' ').map((n) => n[0]).slice(0, 2).join('').toUpperCase()
+    : user.email[0].toUpperCase();
+
+  return (
+    <div className={styles.userSection}>
+      <div className={`${styles.userInfo} ${collapsed ? styles.userInfoCollapsed : ''}`}>
+        {user.picture ? (
+          <img src={user.picture} alt={user.name ?? user.email} className={styles.userAvatar} referrerPolicy="no-referrer" />
+        ) : (
+          <div className={styles.userAvatarInitials}>{initials}</div>
+        )}
+        {!collapsed && (
+          <span className={styles.userName}>{user.name ?? user.email}</span>
+        )}
+      </div>
+      <button
+        type="button"
+        className={`${styles.toggleButton} ${styles.logoutButton}`}
+        onClick={logout}
+        title="Sair"
+        aria-label="Sair da conta"
+      >
+        <LogOut size={20} />
+        {!collapsed && <span className={styles.toggleLabel}>Sair</span>}
+      </button>
+    </div>
+  );
+}
 
 export default function Nav({ collapsed, onToggleCollapsed, isDarkMode, onToggleDarkMode }: NavProps) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -104,6 +140,7 @@ export default function Nav({ collapsed, onToggleCollapsed, isDarkMode, onToggle
             ))}
           </div>
           <div className={styles.mobileDrawerFooter}>
+            <UserSection />
             <button
               type="button"
               className={styles.toggleButton}
@@ -141,6 +178,7 @@ export default function Nav({ collapsed, onToggleCollapsed, isDarkMode, onToggle
         </div>
 
         <div className={styles.footer}>
+          <UserSection collapsed={collapsed} />
           <button
             type="button"
             className={styles.toggleButton}

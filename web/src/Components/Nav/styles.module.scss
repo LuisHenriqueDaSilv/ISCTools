@@ -354,3 +354,66 @@
 .toggleLabel {
 	white-space: nowrap;
 }
+
+.userSection {
+	display: flex;
+	flex-direction: column;
+	gap: 0.25rem;
+	padding-bottom: 0.5rem;
+	border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+	margin-bottom: 0.25rem;
+}
+
+.userInfo {
+	display: flex;
+	align-items: center;
+	gap: 0.75rem;
+	padding: 0.5rem 1rem;
+	border-radius: 12px;
+
+	&.userInfoCollapsed {
+		justify-content: center;
+		padding: 0.5rem;
+	}
+}
+
+.userAvatar {
+	width: 32px;
+	height: 32px;
+	border-radius: 50%;
+	object-fit: cover;
+	flex-shrink: 0;
+}
+
+.userAvatarInitials {
+	width: 32px;
+	height: 32px;
+	border-radius: 50%;
+	background: linear-gradient(135deg, var(--color-accent-lime) 0%, var(--color-accent-purple) 100%);
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	font-size: var(--font-size-xs);
+	font-weight: 700;
+	color: #fff;
+	flex-shrink: 0;
+}
+
+.userName {
+	font-size: var(--font-size-sm);
+	font-weight: 500;
+	color: var(--color-white);
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	max-width: 140px;
+}
+
+.logoutButton {
+	color: #808191;
+
+	&:hover {
+		color: var(--color-danger) !important;
+		background-color: rgba(239, 68, 68, 0.08) !important;
+	}
+}
