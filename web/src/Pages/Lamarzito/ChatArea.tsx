@@ -1,5 +1,7 @@
 import { useEffect, useRef, useState, KeyboardEvent } from 'react'
 import { Send, ChevronDown, ChevronUp, Wrench } from 'lucide-react'
+import ReactMarkdown from 'react-markdown'
+import remarkGfm from 'remark-gfm'
 import { getCookie } from '../../utils/cookies'
 import { streamMessage, SSEEvent } from '../../services/chat'
 import styles from './styles.module.scss'
@@ -187,7 +189,13 @@ export default function ChatArea({ conversationId, initialMessages, onTitleChang
                             </div>
                         )}
                         <div className={styles.bubble}>
-                            {msg.content}
+                            {msg.role === 'assistant' ? (
+                                <ReactMarkdown remarkPlugins={[remarkGfm]}>
+                                    {msg.content}
+                                </ReactMarkdown>
+                            ) : (
+                                msg.content
+                            )}
                             {msg.streaming && <span className={styles.cursor}>▋</span>}
                         </div>
                     </div>
