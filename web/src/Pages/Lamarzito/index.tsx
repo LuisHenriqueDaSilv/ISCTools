@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { Link, useNavigate, useParams } from 'react-router-dom'
-import { LogIn } from 'lucide-react'
+import { SignIn } from '@phosphor-icons/react'
 import { useAuth } from '../../contexts/AuthContext'
 import {
     ConversationSummary,
@@ -98,7 +98,7 @@ export default function Lamarzito() {
         return (
             <div className={styles.loginGate}>
                 <div className={styles.loginPrompt}>
-                    <div className={styles.loginIcon}><LogIn size={28} /></div>
+                    <div className={styles.loginIcon}><SignIn size={26} /></div>
                     <h3>Login necessário</h3>
                     <p>Faça login para conversar com o Lamarzito.</p>
                     <Link to="/login" className={styles.loginLink}>Entrar com Google</Link>

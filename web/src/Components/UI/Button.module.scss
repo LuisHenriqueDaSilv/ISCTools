@@ -2,90 +2,89 @@
     display: inline-flex;
     align-items: center;
     justify-content: center;
+    gap: 0.5rem;
     font-weight: 600;
+    font-family: inherit;
     border-radius: var(--border-radius-md);
-    /* 12px usually */
-    transition: all 0.2s ease-in-out;
+    transition: all 0.15s ease;
     cursor: pointer;
     white-space: nowrap;
     letter-spacing: -0.01em;
+    border: 1px solid transparent;
 
     &:disabled {
-        opacity: 0.6;
+        opacity: 0.4;
         cursor: not-allowed;
+        transform: none !important;
     }
 
-    /* Variants */
     &.primary {
-        background-color: var(--color-accent-purple);
-        color: var(--color-white);
-        box-shadow: 0 4px 10px rgba(108, 93, 211, 0.3);
-        /* Purple glow */
+        background-color: var(--dracula-purple);
+        color: #1e1f29;
+        border-color: var(--dracula-purple);
 
         &:hover:not(:disabled) {
-            background-color: #5843E8;
-            transform: translateY(-1px);
-        }
-    }
-
-    /* New variant for "CTA" (Lime Green) */
-    &.cta {
-        background-color: var(--color-accent-lime);
-        color: #1F2128;
-        /* Black text for contrast */
-        box-shadow: 0 4px 10px rgba(198, 244, 50, 0.4);
-
-        &:hover:not(:disabled) {
-            filter: brightness(1.05);
-            transform: translateY(-1px);
+            background-color: var(--color-primary-hover);
+            border-color: var(--color-primary-hover);
         }
     }
 
     &.secondary {
-        background-color: var(--color-white);
-        color: var(--color-text-title);
-        border: 1px solid var(--border-color);
+        background-color: var(--color-bg-surface);
+        color: var(--color-text-body);
+        border-color: var(--border-color);
 
         &:hover:not(:disabled) {
-            background-color: #F8F9FA;
-            border-color: #D1D5DB;
-        }
-    }
-
-    &.danger {
-        background-color: var(--color-danger);
-        color: var(--color-white);
-
-        &:hover:not(:disabled) {
-            filter: brightness(0.9);
+            border-color: var(--dracula-comment);
+            background-color: rgba(98, 114, 164, 0.1);
         }
     }
 
     &.ghost {
         background-color: transparent;
-        color: var(--color-text-body);
+        color: var(--dracula-comment);
+        border-color: transparent;
 
         &:hover:not(:disabled) {
-            color: var(--color-accent-purple);
-            background-color: rgba(108, 93, 211, 0.05);
-            /* Light purple tint */
+            color: var(--color-text-title);
+            background-color: rgba(98, 114, 164, 0.1);
         }
     }
 
-    /* Sizes */
+    &.danger {
+        background-color: var(--dracula-red);
+        color: var(--dracula-foreground);
+        border-color: var(--dracula-red);
+
+        &:hover:not(:disabled) {
+            filter: brightness(1.1);
+        }
+    }
+
+    &.cta {
+        background-color: var(--dracula-green);
+        color: #1e1f29;
+        border-color: var(--dracula-green);
+
+        &:hover:not(:disabled) {
+            filter: brightness(1.05);
+        }
+    }
+
     &.sm {
-        padding: 0.5rem 1rem;
+        padding: 0.375rem 0.75rem;
         font-size: var(--font-size-sm);
-        border-radius: 8px;
+        border-radius: var(--border-radius-sm);
     }
 
     &.md {
-        padding: 0.75rem 1.5rem;
+        padding: 0.625rem 1.25rem;
         font-size: var(--font-size-base);
     }
 
     &.lg {
-        padding: 1rem 2rem;
-        font-size: var(--font-size-lg);
+        padding: 0.75rem 1.5rem;
+        font-size: var(--font-size-base);
+        font-weight: 600;
     }
 }

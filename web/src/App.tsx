@@ -1,5 +1,5 @@
 import 'react'
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import { createBrowserRouter, RouterProvider, Outlet } from 'react-router-dom'
 
 import styles from "./styles/AppStyles.module.scss"
@@ -12,34 +12,26 @@ import IEEE754 from './Pages/IEEE754'
 import Nav from './Components/Nav'
 import Lamarzito from './Pages/Lamarzito'
 import Login from './Pages/Login'
-// import PNGConverter from './Pages/PngConverter'
 
-const THEME_KEY = 'theme'
-
-function getInitialDarkMode(): boolean {
-  if (typeof window === 'undefined') return false
-  const saved = localStorage.getItem(THEME_KEY)
-  if (saved) return saved === 'dark'
-  return window.matchMedia('(prefers-color-scheme: dark)').matches
-}
+const SIDEBAR_KEY = 'sidebar_collapsed'
 
 const Layout = () => {
-  const [sidebarCollapsed, setSidebarCollapsed] = useState(false)
-  const [isDarkMode, setIsDarkMode] = useState(() => getInitialDarkMode())
+  const [sidebarCollapsed, setSidebarCollapsed] = useState(
+    () => localStorage.getItem(SIDEBAR_KEY) === 'true'
+  )
 
-  useEffect(() => {
-    const theme = isDarkMode ? 'dark' : 'light'
-    document.documentElement.setAttribute('data-theme', theme)
-    localStorage.setItem(THEME_KEY, theme)
-  }, [isDarkMode])
+  function toggleSidebar() {
+    setSidebarCollapsed((c) => {
+      localStorage.setItem(SIDEBAR_KEY, String(!c))
+      return !c
+    })
+  }
 
   return (
     <div className={styles.appLayout}>
       <Nav
         collapsed={sidebarCollapsed}
-        onToggleCollapsed={() => setSidebarCollapsed((c) => !c)}
-        isDarkMode={isDarkMode}
-        onToggleDarkMode={() => setIsDarkMode((d) => !d)}
+        onToggleCollapsed={toggleSidebar}
       />
       <main className={styles.mainContent}>
         <Outlet />

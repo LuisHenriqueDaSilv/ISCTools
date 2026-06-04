@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState, KeyboardEvent } from 'react'
-import { Send, ChevronDown, ChevronUp, Wrench } from 'lucide-react'
+import { PaperPlaneTilt, CaretDown, CaretUp, Wrench } from '@phosphor-icons/react'
 import ReactMarkdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
 import { getCookie } from '../../utils/cookies'
@@ -33,7 +33,7 @@ function ToolCallCard({ call }: { call: ToolCall }) {
             <button className={styles.toolCardHeader} onClick={() => setOpen(v => !v)}>
                 <Wrench size={13} />
                 <span>{call.name}</span>
-                {open ? <ChevronUp size={13} /> : <ChevronDown size={13} />}
+                {open ? <CaretUp size={13} /> : <CaretDown size={13} />}
             </button>
             {open && (
                 <div className={styles.toolCardBody}>
@@ -65,7 +65,7 @@ export default function ChatArea({ conversationId, initialMessages, onTitleChang
         const content = input.trim()
         if (!content || sending) return
 
-        const model = getCookie('gemini_model') || 'gemini-2.5-flash-lite'
+        const model = getCookie('gemini_model') || 'gemini-3.5-flash'
         const apiKey = getCookie('gemini_api_key')
 
         if (!apiKey) {
@@ -76,7 +76,6 @@ export default function ChatArea({ conversationId, initialMessages, onTitleChang
         setInput('')
         setMessages(prev => [...prev, { role: 'user', content }])
 
-        const assistantIdx = messages.length + 1
         setMessages(prev => [...prev, { role: 'assistant', content: '', streaming: true, toolCalls: [] }])
         setSending(true)
 
@@ -204,22 +203,24 @@ export default function ChatArea({ conversationId, initialMessages, onTitleChang
             </div>
 
             <div className={styles.inputArea}>
-                <textarea
-                    className={styles.chatInput}
-                    value={input}
-                    onChange={e => setInput(e.target.value)}
-                    onKeyDown={onKeyDown}
-                    placeholder="Digite sua dúvida... (Enter para enviar, Shift+Enter para nova linha)"
-                    rows={1}
-                    disabled={sending}
-                />
-                <button
-                    className={styles.sendBtn}
-                    onClick={send}
-                    disabled={!input.trim() || sending}
-                >
-                    <Send size={18} />
-                </button>
+                <div className={styles.inputRow}>
+                    <textarea
+                        className={styles.chatInput}
+                        value={input}
+                        onChange={e => setInput(e.target.value)}
+                        onKeyDown={onKeyDown}
+                        placeholder="Digite sua dúvida... (Enter para enviar, Shift+Enter para nova linha)"
+                        rows={1}
+                        disabled={sending}
+                    />
+                    <button
+                        className={styles.sendBtn}
+                        onClick={send}
+                        disabled={!input.trim() || sending}
+                    >
+                        <PaperPlaneTilt size={16} weight="fill" />
+                    </button>
+                </div>
             </div>
         </div>
     )

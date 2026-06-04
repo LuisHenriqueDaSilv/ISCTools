@@ -5,18 +5,21 @@
   align-items: center;
   justify-content: center;
   background-color: var(--color-sidebar-bg);
+  background-image:
+    radial-gradient(ellipse at 20% 50%, rgba(189, 147, 249, 0.06) 0%, transparent 60%),
+    radial-gradient(ellipse at 80% 20%, rgba(139, 233, 253, 0.04) 0%, transparent 50%);
 }
 
 .card {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 1.25rem;
-  padding: 3rem 2.5rem;
-  background-color: rgba(255, 255, 255, 0.04);
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  gap: 1.5rem;
+  padding: 2.5rem 2rem;
+  background-color: var(--color-bg-surface);
+  border: 1px solid var(--border-color);
   border-radius: var(--border-radius-lg);
-  max-width: 420px;
+  max-width: 380px;
   width: 90%;
   text-align: center;
 }
@@ -25,14 +28,14 @@
   display: flex;
   align-items: center;
   gap: 0.75rem;
-  margin-bottom: 0.25rem;
 }
 
 .logoIcon {
-  width: 52px;
-  height: 52px;
-  background: linear-gradient(135deg, var(--color-accent-lime) 0%, var(--color-accent-purple) 100%);
-  border-radius: 14px;
+  width: 44px;
+  height: 44px;
+  background: rgba(189, 147, 249, 0.1);
+  border: 1px solid rgba(189, 147, 249, 0.3);
+  border-radius: var(--border-radius-md);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -40,27 +43,30 @@
 }
 
 .logoText {
-  font-size: 1.75rem;
+  font-size: 1.5rem;
   font-weight: 700;
-  color: var(--color-white);
+  color: var(--dracula-foreground);
   letter-spacing: -0.03em;
 }
 
 .title {
   font-size: var(--font-size-xl);
-  color: var(--color-white);
+  color: var(--dracula-foreground);
   font-weight: 700;
   margin: 0;
+  letter-spacing: -0.02em;
 }
 
 .subtitle {
   font-size: var(--font-size-sm);
-  color: #808191;
+  color: var(--dracula-comment);
   line-height: 1.6;
   margin: 0;
-  max-width: 280px;
+  max-width: 260px;
 }
 
 .googleButton {
-  margin-top: 0.5rem;
+  width: 100%;
+  display: flex;
+  justify-content: center;
 }

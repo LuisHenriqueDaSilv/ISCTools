@@ -1,7 +1,7 @@
 import { useEffect } from 'react'
 import { useNavigate, useLocation } from 'react-router-dom'
 import { GoogleLogin } from '@react-oauth/google'
-import { LayoutDashboard } from 'lucide-react'
+import { SquaresFour } from '@phosphor-icons/react'
 import { useAuth } from '../../contexts/AuthContext'
 import styles from './styles.module.scss'
 
@@ -29,7 +29,7 @@ export default function Login() {
       <div className={styles.card}>
         <div className={styles.logo}>
           <div className={styles.logoIcon}>
-            <LayoutDashboard size={32} color="#FFF" />
+            <SquaresFour size={26} weight="fill" color="var(--dracula-purple)" />
           </div>
           <span className={styles.logoText}>ISCTools</span>
         </div>

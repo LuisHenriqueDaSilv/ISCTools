@@ -1,4 +1,4 @@
-import { Plus, Settings, MessageSquare } from 'lucide-react'
+import { Plus, Gear, ChatText } from '@phosphor-icons/react'
 import { ConversationSummary } from '../../services/chat'
 import styles from './styles.module.scss'
 
@@ -41,7 +41,7 @@ export default function Sidebar({ conversations, activeId, onSelect, onNew, onSe
                         className={`${styles.convItem} ${conv.id === activeId ? styles.active : ''}`}
                         onClick={() => onSelect(conv.id)}
                     >
-                        <MessageSquare size={14} className={styles.convIcon} />
+                        <ChatText size={14} className={styles.convIcon} />
                         <span className={styles.convTitle}>{conv.title}</span>
                         <span className={styles.convDate}>{formatDate(conv.updated_at)}</span>
                     </button>
@@ -50,7 +50,7 @@ export default function Sidebar({ conversations, activeId, onSelect, onNew, onSe
 
             <div className={styles.sidebarBottom}>
                 <button className={styles.settingsBtn} onClick={onSettings}>
-                    <Settings size={16} />
+                    <Gear size={16} />
                     Configurações
                 </button>
             </div>

@@ -3,7 +3,7 @@ import { useEffect } from 'react';
 import styles from './styles.module.scss'
 import { Card } from '../../Components/UI/Card'
 import { Button } from '../../Components/UI/Button'
-import { Github, Linkedin, Instagram } from 'lucide-react'
+import { GithubLogo, LinkedinLogo, InstagramLogo } from '@phosphor-icons/react'
 
 export default function About() {
 
@@ -48,17 +48,17 @@ export default function About() {
               <div className={styles.socialLinks}>
                 <a href="https://github.com/LuisHenriqueDaSilv" target="_blank" rel="noopener noreferrer">
                   <Button variant="ghost" size="sm">
-                    <Github size={18} style={{ marginRight: '0.5rem' }} /> GitHub
+                    <GithubLogo size={16} /> GitHub
                   </Button>
                 </a>
                 <a href="https://www.linkedin.com/in/luishenriquedasilv" target="_blank" rel="noopener noreferrer">
                   <Button variant="ghost" size="sm">
-                    <Linkedin size={18} style={{ marginRight: '0.5rem' }} /> LinkedIn
+                    <LinkedinLogo size={16} /> LinkedIn
                   </Button>
                 </a>
                 <a href="https://www.instagram.com/luishenri.silva/" target="_blank" rel="noopener noreferrer">
                   <Button variant="ghost" size="sm">
-                    <Instagram size={18} style={{ marginRight: '0.5rem' }} /> Instagram
+                    <InstagramLogo size={16} /> Instagram
                   </Button>
                 </a>
               </div>

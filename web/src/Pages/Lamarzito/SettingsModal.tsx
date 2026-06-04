@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { X, Eye, EyeOff } from 'lucide-react'
+import { X, Eye, EyeSlash } from '@phosphor-icons/react'
 import { GeminiModel } from '../../services/chat'
 import { getCookie, setCookie } from '../../utils/cookies'
 import styles from './styles.module.scss'
@@ -44,7 +44,7 @@ export default function SettingsModal({ models, onClose }: Props) {
                             className={styles.apiKeyInput}
                         />
                         <button className={styles.iconBtn} onClick={() => setShowKey(v => !v)}>
-                            {showKey ? <EyeOff size={16} /> : <Eye size={16} />}
+                            {showKey ? <EyeSlash size={16} /> : <Eye size={16} />}
                         </button>
                     </div>
                     <p className={styles.fieldHint}>
