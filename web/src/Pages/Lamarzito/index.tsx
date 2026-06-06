@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { Link, useNavigate, useParams } from 'react-router-dom'
+import { Link, useNavigate, useParams, useLocation } from 'react-router-dom'
 import { SignIn } from '@phosphor-icons/react'
 import { useAuth } from '../../contexts/AuthContext'
 import {
@@ -10,41 +10,70 @@ import {
     fetchModels,
     createConversation,
 } from '../../services/chat'
+import { getCookie, setCookie } from '../../utils/cookies'
+import { useCookieConsent } from '../../contexts/CookieConsentContext'
 import Sidebar from './Sidebar'
+import ChatHeader from './ChatHeader'
 import ChatArea, { ChatMessage } from './ChatArea'
 import SettingsModal from './SettingsModal'
+import BYOAKInfoModal from './BYOAKInfoModal'
 import styles from './styles.module.scss'
 
 export default function Lamarzito() {
     const { user } = useAuth()
     const navigate = useNavigate()
+    const location = useLocation()
     const { conversationId: paramId } = useParams<{ conversationId?: string }>()
 
     const [conversations, setConversations] = useState<ConversationSummary[]>([])
     const [models, setModels] = useState<GeminiModel[]>([])
-    const [activeId, setActiveId] = useState<number | null>(null)
+    const [selectedModel, setSelectedModel] = useState(getCookie('gemini_model') || '')
+    const [activeId, setActiveId] = useState<string | null>(null)
     const [messages, setMessages] = useState<ChatMessage[]>([])
+    const { isAllowed, requestConsent } = useCookieConsent()
     const [showSettings, setShowSettings] = useState(false)
+    const [showApiKeyInfo, setShowApiKeyInfo] = useState(false)
     const [loading, setLoading] = useState(false)
+    const [pendingMessage, setPendingMessage] = useState<string | null>(null)
 
-    // Bootstrap: load models and conversation list
     useEffect(() => {
         if (!user) return
-        fetchModels().then(setModels).catch(() => {})
+        fetchModels().then(list => {
+            setModels(list)
+            const cookieModel = getCookie('gemini_model')
+            const validIds = list.map(m => m.id)
+            if (!cookieModel || !validIds.includes(cookieModel)) {
+                const first = list[0]?.id ?? ''
+                setSelectedModel(first)
+                if (first && isAllowed) setCookie('gemini_model', first)
+            }
+        }).catch(() => {})
         loadConversations()
     }, [user])
 
-    // When URL param changes, load that conversation
     useEffect(() => {
         if (!paramId) {
             setActiveId(null)
             setMessages([])
+            setPendingMessage(null)
             return
         }
-        const id = Number(paramId)
-        if (isNaN(id)) return
-        setActiveId(id)
-        loadMessages(id)
+
+        const state = location.state as { pendingMessage?: string } | null
+        const pending = state?.pendingMessage ?? null
+
+        setActiveId(paramId)
+
+        if (pending) {
+            // new conversation created from empty state — skip loading (no messages yet)
+            setMessages([])
+            setPendingMessage(pending)
+            navigate(location.pathname, { replace: true, state: {} })
+        } else {
+            setPendingMessage(null)
+            loadMessages(paramId)
+        }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [paramId])
 
     async function loadConversations() {
@@ -56,11 +85,23 @@ export default function Lamarzito() {
         }
     }
 
-    async function loadMessages(id: number) {
+    async function loadMessages(id: string) {
         setLoading(true)
         try {
             const conv = await fetchConversation(id)
-            setMessages(conv.messages.map(m => ({ id: m.id, role: m.role as 'user' | 'assistant', content: m.content })))
+            setMessages(conv.messages.map(m => ({
+                id: m.id,
+                role: m.role as 'user' | 'assistant',
+                content: m.content,
+                llm_model: m.llm_model,
+                toolCalls: m.tool_calls.map(tc => ({
+                    name: tc.name,
+                    input: tc.input,
+                    output: tc.output,
+                })),
+                isError: m.is_error,
+                errorCode: m.error_code ?? undefined,
+            })))
         } catch {
             setMessages([])
         } finally {
@@ -83,7 +124,22 @@ export default function Lamarzito() {
         }
     }
 
-    function handleSelect(id: number) {
+    async function handleRequestCreate(message: string) {
+        try {
+            const conv = await createConversation()
+            const summary: ConversationSummary = {
+                id: conv.id,
+                title: conv.title,
+                updated_at: conv.updated_at,
+            }
+            setConversations(prev => [summary, ...prev])
+            navigate(`/lamarzito/${conv.id}`, { state: { pendingMessage: message } })
+        } catch {
+            // ignore
+        }
+    }
+
+    function handleSelect(id: string) {
         navigate(`/lamarzito/${id}`)
     }
 
@@ -93,6 +149,15 @@ export default function Lamarzito() {
             prev.map(c => (c.id === activeId ? { ...c, title } : c))
         )
     }
+
+    function handleModelChange(model: string) {
+        setSelectedModel(model)
+        requestConsent(() => setCookie('gemini_model', model))
+    }
+
+    const activeTitle = activeId
+        ? (conversations.find(c => c.id === activeId)?.title ?? '')
+        : ''
 
     if (!user) {
         return (
@@ -114,33 +179,47 @@ export default function Lamarzito() {
                 activeId={activeId}
                 onSelect={handleSelect}
                 onNew={handleNew}
-                onSettings={() => setShowSettings(true)}
             />
 
             <main className={styles.chatMain}>
-                {activeId ? (
-                    loading ? (
-                        <div className={styles.loadingState}>Carregando conversa...</div>
-                    ) : (
-                        <ChatArea
-                            key={activeId}
-                            conversationId={activeId}
-                            initialMessages={messages}
-                            onTitleChange={handleTitleChange}
-                        />
-                    )
+                <ChatHeader
+                    title={activeTitle}
+                    models={models}
+                    selectedModel={selectedModel}
+                    onModelChange={handleModelChange}
+                    onOpenApiKey={() => setShowSettings(true)}
+                    onOpenApiKeyInfo={() => setShowApiKeyInfo(true)}
+                />
+
+                {loading ? (
+                    <div className={styles.loadingState}>Carregando conversa...</div>
                 ) : (
-                    <div className={styles.noConvSelected}>
-                        <p>Selecione um chat ou crie um novo para começar.</p>
-                        <button className={styles.newChatCta} onClick={handleNew}>
-                            Iniciar novo chat
-                        </button>
-                    </div>
+                    <ChatArea
+                        key={activeId ?? 'empty'}
+                        conversationId={activeId}
+                        initialMessages={messages}
+                        selectedModel={selectedModel}
+                        models={models}
+                        onTitleChange={handleTitleChange}
+                        onRequestCreate={handleRequestCreate}
+                        initialInput={pendingMessage ?? undefined}
+                        autoSend={!!pendingMessage}
+                    />
                 )}
             </main>
 
             {showSettings && (
-                <SettingsModal models={models} onClose={() => setShowSettings(false)} />
+                <SettingsModal
+                    onClose={() => setShowSettings(false)}
+                    onOpenInfo={() => { setShowSettings(false); setShowApiKeyInfo(true) }}
+                />
+            )}
+
+            {showApiKeyInfo && (
+                <BYOAKInfoModal
+                    onClose={() => setShowApiKeyInfo(false)}
+                    onOpenSettings={() => setShowSettings(true)}
+                />
             )}
         </div>
     )

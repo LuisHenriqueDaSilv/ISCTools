@@ -1,13 +1,12 @@
-import { Plus, Gear, ChatText } from '@phosphor-icons/react'
+import { Plus, ChatText } from '@phosphor-icons/react'
 import { ConversationSummary } from '../../services/chat'
 import styles from './styles.module.scss'
 
 interface Props {
     conversations: ConversationSummary[]
-    activeId: number | null
-    onSelect: (id: number) => void
+    activeId: string | null
+    onSelect: (id: string) => void
     onNew: () => void
-    onSettings: () => void
 }
 
 function formatDate(dateStr: string): string {
@@ -21,7 +20,7 @@ function formatDate(dateStr: string): string {
     return date.toLocaleDateString('pt-BR', { day: '2-digit', month: 'short' })
 }
 
-export default function Sidebar({ conversations, activeId, onSelect, onNew, onSettings }: Props) {
+export default function Sidebar({ conversations, activeId, onSelect, onNew }: Props) {
     return (
         <aside className={styles.sidebar}>
             <div className={styles.sidebarTop}>
@@ -33,7 +32,7 @@ export default function Sidebar({ conversations, activeId, onSelect, onNew, onSe
 
             <nav className={styles.convList}>
                 {conversations.length === 0 && (
-                    <p className={styles.emptyState}>Nenhum chat ainda.</p>
+                    <p className={styles.emptyState}>você ainda não tem nenhuma conversa com o Lamarzito.</p>
                 )}
                 {conversations.map(conv => (
                     <button
@@ -47,13 +46,6 @@ export default function Sidebar({ conversations, activeId, onSelect, onNew, onSe
                     </button>
                 ))}
             </nav>
-
-            <div className={styles.sidebarBottom}>
-                <button className={styles.settingsBtn} onClick={onSettings}>
-                    <Gear size={16} />
-                    Configurações
-                </button>
-            </div>
         </aside>
     )
 }

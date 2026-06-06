@@ -1,5 +1,21 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap');
 
+/* ─── KaTeX theme overrides ─── */
+.katex {
+  color: var(--dracula-foreground);
+  font-size: 1em;
+}
+
+.katex-display {
+  margin: 0.6rem 0;
+  overflow-x: auto;
+  overflow-y: hidden;
+}
+
+.katex-display > .katex {
+  color: var(--dracula-foreground);
+}
+
 :root {
   /* Dracula Palette */
   --dracula-background: #282a36;

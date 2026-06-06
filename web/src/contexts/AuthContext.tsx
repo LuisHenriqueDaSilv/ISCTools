@@ -1,6 +1,6 @@
 import { createContext, useContext, useEffect, useState, ReactNode } from 'react'
 import { loginWithGoogle } from '../services/auth'
-import { setAuthToken } from '../services/axios'
+import { setAuthToken, resetSessionExpiredFlag } from '../services/axios'
 
 interface User {
   id: number
@@ -12,8 +12,11 @@ interface User {
 interface AuthContextType {
   user: User | null
   isLoading: boolean
+  sessionExpired: boolean
   login: (credential: string) => Promise<void>
   logout: () => void
+  confirmLogout: () => void
+  dismissSessionExpired: () => void
 }
 
 const AuthContext = createContext<AuthContextType | null>(null)
@@ -29,6 +32,7 @@ function decodeJwt(token: string): Record<string, unknown> {
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null)
   const [isLoading, setIsLoading] = useState(true)
+  const [sessionExpired, setSessionExpired] = useState(false)
 
   useEffect(() => {
     const token = localStorage.getItem(TOKEN_KEY)
@@ -38,6 +42,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       setUser(JSON.parse(userJson))
     }
     setIsLoading(false)
+  }, [])
+
+  useEffect(() => {
+    function handleSessionExpired() {
+      setSessionExpired(true)
+    }
+    window.addEventListener('auth:session-expired', handleSessionExpired)
+    return () => window.removeEventListener('auth:session-expired', handleSessionExpired)
   }, [])
 
   async function login(credential: string) {
@@ -62,6 +74,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     localStorage.setItem(USER_KEY, JSON.stringify(userData))
     setAuthToken(access_token)
     setUser(userData)
+    resetSessionExpiredFlag()
   }
 
   function logout() {
@@ -71,8 +84,19 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setUser(null)
   }
 
+  function confirmLogout() {
+    setSessionExpired(false)
+    resetSessionExpiredFlag()
+    logout()
+  }
+
+  function dismissSessionExpired() {
+    setSessionExpired(false)
+    resetSessionExpiredFlag()
+  }
+
   return (
-    <AuthContext.Provider value={{ user, isLoading, login, logout }}>
+    <AuthContext.Provider value={{ user, isLoading, sessionExpired, login, logout, confirmLogout, dismissSessionExpired }}>
       {children}
     </AuthContext.Provider>
   )

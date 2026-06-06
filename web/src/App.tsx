@@ -12,6 +12,9 @@ import IEEE754 from './Pages/IEEE754'
 import Nav from './Components/Nav'
 import Lamarzito from './Pages/Lamarzito'
 import Login from './Pages/Login'
+import SessionExpiredToast from './Components/SessionExpiredToast'
+import ToastContainer from './Components/ToastContainer'
+import CookieConsent from './Components/CookieConsent'
 
 const SIDEBAR_KEY = 'sidebar_collapsed'
 
@@ -36,6 +39,9 @@ const Layout = () => {
       <main className={styles.mainContent}>
         <Outlet />
       </main>
+      <SessionExpiredToast />
+      <ToastContainer />
+      <CookieConsent />
     </div>
   )
 }

@@ -1,39 +1,43 @@
 import { useEffect, useState } from 'react'
-import { X, Eye, EyeSlash } from '@phosphor-icons/react'
-import { GeminiModel } from '../../services/chat'
+import { X, Eye, EyeSlash, Question } from '@phosphor-icons/react'
 import { getCookie, setCookie } from '../../utils/cookies'
+import { useCookieConsent } from '../../contexts/CookieConsentContext'
 import styles from './styles.module.scss'
 
 interface Props {
-    models: GeminiModel[]
     onClose: () => void
+    onOpenInfo: () => void
 }
 
-export default function SettingsModal({ models, onClose }: Props) {
+export default function SettingsModal({ onClose, onOpenInfo }: Props) {
     const [apiKey, setApiKey] = useState('')
-    const [selectedModel, setSelectedModel] = useState('')
     const [showKey, setShowKey] = useState(false)
+    const { requestConsent } = useCookieConsent()
 
     useEffect(() => {
         setApiKey(getCookie('gemini_api_key'))
-        setSelectedModel(getCookie('gemini_model') || (models[0]?.id ?? ''))
-    }, [models])
+    }, [])
 
     function save() {
-        setCookie('gemini_api_key', apiKey)
-        setCookie('gemini_model', selectedModel)
-        onClose()
+        requestConsent(() => {
+            setCookie('gemini_api_key', apiKey)
+            onClose()
+        })
     }
 
     return (
         <div className={styles.modalOverlay} onClick={onClose}>
             <div className={styles.modal} onClick={e => e.stopPropagation()}>
                 <div className={styles.modalHeader}>
-                    <h3>Configurações do Lamarzito</h3>
+                    <h3>Google API Key</h3>
                     <button className={styles.iconBtn} onClick={onClose}><X size={18} /></button>
                 </div>
 
                 <div className={styles.modalBody}>
+                    <button className={styles.byoakInfoBtn} onClick={onOpenInfo}>
+                        <Question size={14} weight="bold" />
+                        O que é Bring Your Own API Key?
+                    </button>
                     <label className={styles.fieldLabel}>Google API Key</label>
                     <div className={styles.apiKeyWrapper}>
                         <input
@@ -52,17 +56,6 @@ export default function SettingsModal({ models, onClose }: Props) {
                         <span className={styles.link}>aistudio.google.com</span>.
                         A chave é salva apenas no seu navegador.
                     </p>
-
-                    <label className={styles.fieldLabel}>Modelo Gemini</label>
-                    <select
-                        value={selectedModel}
-                        onChange={e => setSelectedModel(e.target.value)}
-                        className={styles.select}
-                    >
-                        {models.map(m => (
-                            <option key={m.id} value={m.id}>{m.alias}</option>
-                        ))}
-                    </select>
                 </div>
 
                 <div className={styles.modalFooter}>
