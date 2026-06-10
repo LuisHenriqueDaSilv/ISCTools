@@ -1,0 +1,94 @@
+.toast {
+    position: fixed;
+    bottom: 1.5rem;
+    right: 1.5rem;
+    z-index: 9999;
+    display: flex;
+    align-items: flex-start;
+    gap: 0.75rem;
+    width: min(360px, calc(100vw - 3rem));
+    padding: 1rem 1.125rem;
+    background: var(--color-bg-surface);
+    border: 1px solid rgba(255, 184, 108, 0.35);
+    border-left: 3px solid var(--dracula-orange, #ffb86c);
+    border-radius: var(--border-radius-md);
+    box-shadow: var(--shadow-lg);
+    animation: slideIn 0.22s ease-out;
+}
+
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateY(12px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.icon {
+    flex-shrink: 0;
+    color: var(--dracula-orange, #ffb86c);
+    margin-top: 1px;
+}
+
+.body {
+    flex: 1;
+    min-width: 0;
+}
+
+.title {
+    margin: 0 0 0.2rem;
+    font-size: var(--font-size-sm);
+    font-weight: 700;
+    color: var(--dracula-foreground);
+}
+
+.message {
+    margin: 0 0 0.75rem;
+    font-size: 0.8rem;
+    color: var(--dracula-foreground);
+    opacity: 0.85;
+    line-height: 1.45;
+}
+
+.actions {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.dismissBtn {
+    padding: 0.35rem 0.75rem;
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius-sm);
+    background: transparent;
+    color: var(--dracula-comment);
+    font-size: 0.78rem;
+    font-family: inherit;
+    cursor: pointer;
+    transition: all 0.12s;
+
+    &:hover {
+        background: rgba(98, 114, 164, 0.1);
+        color: var(--dracula-foreground);
+    }
+}
+
+.loginBtn {
+    padding: 0.35rem 0.875rem;
+    border: none;
+    border-radius: var(--border-radius-sm);
+    background: var(--dracula-purple);
+    color: #1e1f29;
+    font-size: 0.78rem;
+    font-family: inherit;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.15s;
+
+    &:hover {
+        background: var(--color-primary-hover);
+    }
+}

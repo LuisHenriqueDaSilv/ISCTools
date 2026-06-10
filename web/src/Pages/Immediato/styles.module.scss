@@ -1,5 +1,5 @@
 .container {
-  max-width: 800px;
+  max-width: 760px;
   margin: 0 auto;
   width: 100%;
 }
@@ -8,60 +8,63 @@
   margin-bottom: 2rem;
 
   h1 {
-    font-size: var(--font-size-2xl);
-    margin-bottom: 0.5rem;
-    color: var(--color-text-title);
+    font-size: var(--font-size-xl);
+    margin-bottom: 0.375rem;
+    color: var(--dracula-foreground);
+    letter-spacing: -0.02em;
   }
 
   p {
-    color: var(--color-text-body);
-    font-size: var(--font-size-base);
+    color: var(--dracula-comment);
+    font-size: var(--font-size-sm);
+    margin-bottom: 0;
   }
 }
 
 .contentGrid {
   display: flex;
   flex-direction: column;
-  gap: 1.5rem;
+  gap: 1rem;
 }
 
 .form {
   display: flex;
   flex-direction: column;
-  gap: 1.5rem;
+  gap: 1.25rem;
 }
 
 .row {
   display: flex;
-  gap: 1.5rem;
+  gap: 1rem;
   width: 100%;
 
   @media (max-width: 640px) {
     flex-direction: column;
-    gap: 1rem;
   }
 }
 
 .submitBtn {
   width: 100%;
-  margin-top: 1rem;
+  margin-top: 0.5rem;
 }
 
 .resultCard {
-  /* Styling handled by Card variant="result" */
-
   label {
-    font-size: var(--font-size-sm);
-    opacity: 0.7;
+    font-size: var(--font-size-xs);
     display: block;
     margin-bottom: 0.5rem;
-    color: var(--color-text-light);
+    color: var(--dracula-comment);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    font-weight: 600;
   }
 }
 
 .resultValue {
-  font-size: var(--font-size-2xl);
-  font-weight: 700;
+  font-size: 1.5rem;
+  font-weight: 600;
   word-break: break-all;
-  font-family: monospace;
+  font-family: var(--font-mono);
+  color: var(--dracula-cyan);
+  line-height: 1.4;
 }

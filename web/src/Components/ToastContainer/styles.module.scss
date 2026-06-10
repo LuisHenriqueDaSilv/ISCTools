@@ -1,0 +1,68 @@
+.container {
+    position: fixed;
+    top: 1.25rem;
+    right: 1.25rem;
+    z-index: 9998;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    max-width: min(380px, calc(100vw - 2.5rem));
+    pointer-events: none;
+}
+
+.toast {
+    display: flex;
+    align-items: center;
+    gap: 0.625rem;
+    padding: 0.75rem 0.875rem;
+    background: var(--color-bg-surface);
+    border: 1px solid rgba(255, 85, 85, 0.3);
+    border-left: 3px solid #ff5555;
+    border-radius: var(--border-radius-md);
+    box-shadow: var(--shadow-lg);
+    animation: slideIn 0.2s ease-out;
+    pointer-events: all;
+}
+
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateX(12px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+.icon {
+    flex-shrink: 0;
+    color: #ff5555;
+}
+
+.message {
+    flex: 1;
+    font-size: 0.8rem;
+    color: var(--dracula-foreground);
+    line-height: 1.4;
+}
+
+.closeBtn {
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 22px;
+    height: 22px;
+    border: none;
+    background: transparent;
+    color: var(--dracula-comment);
+    cursor: pointer;
+    border-radius: var(--border-radius-sm);
+    transition: all 0.12s;
+
+    &:hover {
+        background: rgba(98, 114, 164, 0.12);
+        color: var(--dracula-foreground);
+    }
+}

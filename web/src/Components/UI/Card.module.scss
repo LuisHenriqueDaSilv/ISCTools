@@ -1,43 +1,37 @@
 .card {
     background-color: var(--color-bg-surface);
     border-radius: var(--border-radius-lg);
-    box-shadow: var(--shadow-sm);
+    border: 1px solid var(--border-color);
     padding: 1.5rem;
-    transition: box-shadow 0.2s ease-in-out;
-    color: var(--color-text-title);
-    border: none;
+    transition: border-color 0.15s;
 
     &:hover {
-        box-shadow: var(--shadow-md);
+        border-color: rgba(98, 114, 164, 0.5);
     }
 
-    /* Rename .dark to .result to verify semantic usage */
     &.result {
-        background-color: var(--color-bg-surface);
-        /* White background per request */
-        color: var(--color-text-title);
-        /* Dark text */
-        border: 1px solid var(--border-color);
-        /* Subtle border for definition */
+        background-color: #1e1f29;
+        border-color: var(--border-color);
 
         label {
-            color: var(--color-text-body);
-            font-size: var(--font-size-sm);
-            margin-bottom: 0.5rem;
+            font-size: var(--font-size-xs);
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            color: var(--dracula-comment);
+            margin-bottom: 0.75rem;
             display: block;
-            font-weight: 500;
         }
 
-        /* Enforce uniform big font size for results */
         .resultValue,
         .codeLine,
         div {
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 1.25rem;
-            /* Matches Assembler size */
-            color: var(--color-text-title);
+            font-family: var(--font-mono);
+            font-size: 1.1rem;
+            color: var(--dracula-cyan);
             white-space: pre-wrap;
             word-break: break-all;
+            line-height: 1.6;
         }
     }
 }

@@ -2,40 +2,71 @@ import { useState, useEffect } from 'react';
 import styles from './styles.module.scss';
 import { NavLink, useLocation } from 'react-router-dom';
 import {
-  Bot,
-  Binary,
+  Robot,
+  Hash,
   Cpu,
-  Zap,
+  Lightning,
   FileCode,
   Package,
   Info,
-  LayoutDashboard,
-  PanelLeftClose,
-  PanelLeft,
-  Moon,
-  Sun,
-  Menu,
-  X
-} from 'lucide-react';
+  SquaresFour,
+  SidebarSimple,
+  List,
+  X,
+  SignOut,
+} from '@phosphor-icons/react';
+import { useAuth } from '../../contexts/AuthContext';
 
 interface NavProps {
   collapsed: boolean;
   onToggleCollapsed: () => void;
-  isDarkMode: boolean;
-  onToggleDarkMode: () => void;
 }
 
 const navItems = [
-  { to: '/lamarzito', label: 'Lamarzito-Tutor', icon: <Bot size={20} /> },
-  { to: '/bases-numericas', label: 'Bases Numéricas', icon: <Binary size={20} /> },
+  { to: '/lamarzito', label: 'Lamarzin', icon: <Robot size={20} /> },
+  { to: '/bases-numericas', label: 'Bases Numéricas', icon: <Hash size={20} /> },
   { to: '/ieee754', label: 'IEEE754', icon: <Cpu size={20} /> },
-  { to: '/immediato', label: 'Immediato', icon: <Zap size={20} /> },
+  { to: '/immediato', label: 'Immediato', icon: <Lightning size={20} /> },
   { to: '/disassembler', label: 'Disassembler', icon: <FileCode size={20} /> },
   { to: '/assembler', label: 'Assembler', icon: <Package size={20} /> },
   { to: '/sobre', label: 'Sobre', icon: <Info size={20} /> },
 ];
 
-export default function Nav({ collapsed, onToggleCollapsed, isDarkMode, onToggleDarkMode }: NavProps) {
+function UserSection({ collapsed }: { collapsed?: boolean }) {
+  const { user, logout } = useAuth();
+  if (!user) return null;
+
+  const initials = user.name
+    ? user.name.split(' ').map((n) => n[0]).slice(0, 2).join('').toUpperCase()
+    : user.email[0].toUpperCase();
+
+  return (
+    <div className={styles.userSection}>
+      <div className={`${styles.userInfo} ${collapsed ? styles.userInfoCollapsed : ''}`}>
+        {user.picture ? (
+          <img src={user.picture} alt={user.name ?? user.email} className={styles.userAvatar} referrerPolicy="no-referrer" />
+        ) : (
+          <div className={styles.userAvatarInitials}>{initials}</div>
+        )}
+        {!collapsed && (
+          <span className={styles.userName}>{user.name ?? user.email}</span>
+        )}
+      </div>
+      <button
+        type="button"
+        className={`${styles.toggleButton} ${styles.logoutButton}`}
+        onClick={logout}
+        title="Sair"
+        aria-label="Sair da conta"
+      >
+        <SignOut size={18} />
+        {!collapsed && <span className={styles.toggleLabel}>Sair</span>}
+      </button>
+    </div>
+  );
+}
+
+export default function Nav({ collapsed, onToggleCollapsed }: NavProps) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const location = useLocation();
 
@@ -70,7 +101,7 @@ export default function Nav({ collapsed, onToggleCollapsed, isDarkMode, onToggle
           aria-controls="mobile-nav-drawer"
           aria-label={mobileMenuOpen ? 'Fechar menu' : 'Abrir menu de ferramentas'}
         >
-          {mobileMenuOpen ? <X size={22} /> : <Menu size={22} />}
+          {mobileMenuOpen ? <X size={20} /> : <List size={20} />}
         </button>
         <span className={styles.mobileTitle}>ISCTools</span>
       </header>
@@ -91,7 +122,7 @@ export default function Nav({ collapsed, onToggleCollapsed, isDarkMode, onToggle
         <div className={styles.mobileDrawerInner}>
           <div className={styles.logoContainer}>
             <div className={styles.logoIcon}>
-              <LayoutDashboard size={24} color="#FFF" />
+              <SquaresFour size={22} weight="fill" color="var(--dracula-purple)" />
             </div>
             <span className={styles.logoText}>ISCTools</span>
           </div>
@@ -104,16 +135,7 @@ export default function Nav({ collapsed, onToggleCollapsed, isDarkMode, onToggle
             ))}
           </div>
           <div className={styles.mobileDrawerFooter}>
-            <button
-              type="button"
-              className={styles.toggleButton}
-              onClick={onToggleDarkMode}
-              title={isDarkMode ? 'Desativar modo escuro' : 'Ativar modo escuro'}
-              aria-label={isDarkMode ? 'Desativar modo escuro' : 'Ativar modo escuro'}
-            >
-              {isDarkMode ? <Sun size={20} /> : <Moon size={20} />}
-              <span className={styles.toggleLabel}>{isDarkMode ? 'Modo claro' : 'Modo escuro'}</span>
-            </button>
+            <UserSection />
           </div>
         </div>
       </div>
@@ -121,7 +143,7 @@ export default function Nav({ collapsed, onToggleCollapsed, isDarkMode, onToggle
       <nav className={`${styles.sidebar} ${collapsed ? styles.sidebarCollapsed : ''}`}>
         <div className={styles.logoContainer}>
           <div className={styles.logoIcon}>
-            <LayoutDashboard size={24} color="#FFF" />
+            <SquaresFour size={22} weight="fill" color="var(--dracula-purple)" />
           </div>
           <span className={styles.logoText}>ISCTools</span>
         </div>
@@ -141,25 +163,16 @@ export default function Nav({ collapsed, onToggleCollapsed, isDarkMode, onToggle
         </div>
 
         <div className={styles.footer}>
-          <button
-            type="button"
-            className={styles.toggleButton}
-            onClick={onToggleDarkMode}
-            title={isDarkMode ? 'Desativar modo escuro' : 'Ativar modo escuro'}
-            aria-label={isDarkMode ? 'Desativar modo escuro' : 'Ativar modo escuro'}
-          >
-            {isDarkMode ? <Sun size={20} /> : <Moon size={20} />}
-            <span className={styles.toggleLabel}>{isDarkMode ? 'Modo claro' : 'Modo escuro'}</span>
-          </button>
+          <UserSection collapsed={collapsed} />
           <button
             type="button"
             className={styles.toggleButton}
             onClick={onToggleCollapsed}
-            title={collapsed ? 'Expandir barra lateral' : 'Encolher barra lateral'}
-            aria-label={collapsed ? 'Expandir barra lateral' : 'Encolher barra lateral'}
+            title={collapsed ? 'Expandir barra lateral' : 'Recolher barra lateral'}
+            aria-label={collapsed ? 'Expandir barra lateral' : 'Recolher barra lateral'}
           >
-            {collapsed ? <PanelLeft size={20} /> : <PanelLeftClose size={20} />}
-            <span className={styles.toggleLabel}>Encolher menu</span>
+            <SidebarSimple size={18} />
+            <span className={styles.toggleLabel}>Recolher menu</span>
           </button>
         </div>
       </nav>
