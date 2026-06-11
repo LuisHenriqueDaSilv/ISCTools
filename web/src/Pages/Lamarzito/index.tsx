@@ -35,6 +35,8 @@ export default function Lamarzito() {
     const [showApiKeyInfo, setShowApiKeyInfo] = useState(false)
     const [loading, setLoading] = useState(false)
     const [pendingMessage, setPendingMessage] = useState<string | null>(null)
+    const [mobileSidebarOpen, setMobileSidebarOpen] = useState(false)
+    const [mobileSettingsOpen, setMobileSettingsOpen] = useState(false)
 
     useEffect(() => {
         if (!user) return
@@ -118,6 +120,7 @@ export default function Lamarzito() {
                 updated_at: conv.updated_at,
             }
             setConversations(prev => [summary, ...prev])
+            setMobileSidebarOpen(false)
             navigate(`/lamarzito/${conv.id}`)
         } catch {
             // ignore
@@ -140,6 +143,7 @@ export default function Lamarzito() {
     }
 
     function handleSelect(id: string) {
+        setMobileSidebarOpen(false)
         navigate(`/lamarzito/${id}`)
     }
 
@@ -179,7 +183,16 @@ export default function Lamarzito() {
                 activeId={activeId}
                 onSelect={handleSelect}
                 onNew={handleNew}
+                mobileOpen={mobileSidebarOpen}
             />
+
+            {mobileSidebarOpen && (
+                <div
+                    className={styles.mobileSidebarBackdrop}
+                    aria-hidden
+                    onClick={() => setMobileSidebarOpen(false)}
+                />
+            )}
 
             <main className={styles.chatMain}>
                 <ChatHeader
@@ -187,8 +200,12 @@ export default function Lamarzito() {
                     models={models}
                     selectedModel={selectedModel}
                     onModelChange={handleModelChange}
-                    onOpenApiKey={() => setShowSettings(true)}
-                    onOpenApiKeyInfo={() => setShowApiKeyInfo(true)}
+                    onOpenApiKey={() => { setMobileSettingsOpen(false); setShowSettings(true) }}
+                    onOpenApiKeyInfo={() => { setMobileSettingsOpen(false); setShowApiKeyInfo(true) }}
+                    mobileSidebarOpen={mobileSidebarOpen}
+                    onToggleMobileSidebar={() => setMobileSidebarOpen(v => !v)}
+                    mobileSettingsOpen={mobileSettingsOpen}
+                    onToggleMobileSettings={() => setMobileSettingsOpen(v => !v)}
                 />
 
                 {loading ? (

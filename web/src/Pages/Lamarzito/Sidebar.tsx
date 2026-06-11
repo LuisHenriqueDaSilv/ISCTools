@@ -7,6 +7,7 @@ interface Props {
     activeId: string | null
     onSelect: (id: string) => void
     onNew: () => void
+    mobileOpen?: boolean
 }
 
 function formatDate(dateStr: string): string {
@@ -20,9 +21,9 @@ function formatDate(dateStr: string): string {
     return date.toLocaleDateString('pt-BR', { day: '2-digit', month: 'short' })
 }
 
-export default function Sidebar({ conversations, activeId, onSelect, onNew }: Props) {
+export default function Sidebar({ conversations, activeId, onSelect, onNew, mobileOpen = false }: Props) {
     return (
-        <aside className={styles.sidebar}>
+        <aside className={`${styles.sidebar} ${mobileOpen ? styles.sidebarMobileOpen : ''}`}>
             <div className={styles.sidebarTop}>
                 <button className={styles.newChatBtn} onClick={onNew}>
                     <Plus size={16} />
