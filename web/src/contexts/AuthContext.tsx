@@ -1,6 +1,7 @@
 import { createContext, useContext, useEffect, useState, ReactNode } from 'react'
 import { loginWithGoogle } from '../services/auth'
-import { setAuthToken, resetSessionExpiredFlag } from '../services/axios'
+import { resetSessionExpiredFlag } from '../services/axios'
+import { getCookie, setCookie, deleteCookie } from '../utils/cookies'
 
 interface User {
   id: number
@@ -21,28 +22,28 @@ interface AuthContextType {
 
 const AuthContext = createContext<AuthContextType | null>(null)
 
-const TOKEN_KEY = 'isctools_token'
-const USER_KEY = 'isctools_user'
+const TOKEN_COOKIE = 'isctools_token'
+const USER_COOKIE = 'isctools_user'
 
 function decodeJwt(token: string): Record<string, unknown> {
   const base64 = token.split('.')[1].replace(/-/g, '+').replace(/_/g, '/')
   return JSON.parse(window.atob(base64))
 }
 
-export function AuthProvider({ children }: { children: ReactNode }) {
-  const [user, setUser] = useState<User | null>(null)
-  const [isLoading, setIsLoading] = useState(true)
-  const [sessionExpired, setSessionExpired] = useState(false)
+function readStoredUser(): User | null {
+  const token = getCookie(TOKEN_COOKIE)
+  const userJson = getCookie(USER_COOKIE)
+  if (!token || !userJson) return null
+  try {
+    return JSON.parse(userJson) as User
+  } catch {
+    return null
+  }
+}
 
-  useEffect(() => {
-    const token = localStorage.getItem(TOKEN_KEY)
-    const userJson = localStorage.getItem(USER_KEY)
-    if (token && userJson) {
-      setAuthToken(token)
-      setUser(JSON.parse(userJson))
-    }
-    setIsLoading(false)
-  }, [])
+export function AuthProvider({ children }: { children: ReactNode }) {
+  const [user, setUser] = useState<User | null>(() => readStoredUser())
+  const [sessionExpired, setSessionExpired] = useState(false)
 
   useEffect(() => {
     function handleSessionExpired() {
@@ -70,17 +71,15 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       picture: googlePayload.picture ?? null,
     }
 
-    localStorage.setItem(TOKEN_KEY, access_token)
-    localStorage.setItem(USER_KEY, JSON.stringify(userData))
-    setAuthToken(access_token)
+    setCookie(TOKEN_COOKIE, access_token)
+    setCookie(USER_COOKIE, JSON.stringify(userData))
     setUser(userData)
     resetSessionExpiredFlag()
   }
 
   function logout() {
-    localStorage.removeItem(TOKEN_KEY)
-    localStorage.removeItem(USER_KEY)
-    setAuthToken(null)
+    deleteCookie(TOKEN_COOKIE)
+    deleteCookie(USER_COOKIE)
     setUser(null)
   }
 
@@ -96,7 +95,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }
 
   return (
-    <AuthContext.Provider value={{ user, isLoading, sessionExpired, login, logout, confirmLogout, dismissSessionExpired }}>
+    <AuthContext.Provider value={{ user, isLoading: false, sessionExpired, login, logout, confirmLogout, dismissSessionExpired }}>
       {children}
     </AuthContext.Provider>
   )
