@@ -26,11 +26,11 @@
 
     @media (max-width: 768px) {
         display: block;
-        position: absolute;
+        position: fixed;
         inset: 0;
         background: rgba(30, 31, 41, 0.55);
         backdrop-filter: blur(2px);
-        z-index: 10;
+        z-index: 90;
     }
 }
 
@@ -46,8 +46,8 @@
     overflow: hidden;
 
     @media (max-width: 768px) {
-        position: absolute;
-        top: 0;
+        position: fixed;
+        top: calc(3.75rem + env(safe-area-inset-top, 0px));
         left: 0;
         bottom: 0;
         width: min(280px, 82vw);
@@ -55,7 +55,7 @@
         max-height: none;
         border-right: 1px solid var(--border-color);
         border-bottom: none;
-        z-index: 20;
+        z-index: 100;
         transform: translateX(-100%);
         transition: transform 0.22s ease;
         box-shadow: 4px 0 24px rgba(0, 0, 0, 0.25);
@@ -199,6 +199,8 @@
 
     @media (max-width: 768px) {
         padding: 1.25rem 0.75rem;
+        justify-content: flex-start;
+        min-height: 0;
     }
 }
 
@@ -350,6 +352,14 @@
     flex-shrink: 0;
     min-height: 48px;
     position: relative;
+
+    @media (max-width: 768px) {
+        position: fixed;
+        top: calc(3.75rem + env(safe-area-inset-top, 0px));
+        left: 0;
+        right: 0;
+        z-index: 50;
+    }
 }
 
 .headerSettingsBtn {
@@ -520,6 +530,11 @@
     gap: 1.25rem;
     // allow emptyState to stretch to full height
     min-height: 0;
+
+    @media (max-width: 768px) {
+        padding-top: calc(48px + 1rem);
+        padding-bottom: calc(64px + env(safe-area-inset-bottom, 0px) + 1rem);
+    }
 }
 
 
@@ -777,6 +792,11 @@
     flex-shrink: 0;
 
     @media (max-width: 768px) {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        z-index: 50;
         padding-bottom: calc(0.75rem + env(safe-area-inset-bottom, 0px));
     }
 }
