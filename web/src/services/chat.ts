@@ -68,7 +68,7 @@ export async function* retryMessage(
     model: string,
     onEvent: (event: SSEEvent) => void,
 ): AsyncGenerator<void> {
-    const token = localStorage.getItem('isctools_token') ?? ''
+    const token = getCookie('isctools_token')
     const apiKey = getCookie('gemini_api_key')
 
     const response = await fetch(
@@ -128,7 +128,7 @@ export async function* streamMessage(
     model: string,
     onEvent: (event: SSEEvent) => void,
 ): AsyncGenerator<void> {
-    const token = localStorage.getItem('isctools_token') ?? ''
+    const token = getCookie('isctools_token')
     const apiKey = getCookie('gemini_api_key')
 
     const response = await fetch(
