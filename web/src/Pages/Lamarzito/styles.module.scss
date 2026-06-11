@@ -13,9 +13,11 @@
     }
 
     @media (max-width: 768px) {
-        margin: -2rem;
-        margin-top: calc(-3.75rem - env(safe-area-inset-top, 0px));
-        height: calc(100% + 3.75rem + env(safe-area-inset-top, 0px) + 2rem);
+        margin-left: -2rem;
+        margin-right: -2rem;
+        margin-bottom: -2rem;
+        margin-top: 0;
+        height: calc(100% + 2rem);
     }
 }
 
