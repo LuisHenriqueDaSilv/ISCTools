@@ -528,7 +528,10 @@
     }
 }
 
-.headerModelSelect {
+.modelToggleBtn {
+    display: flex;
+    align-items: center;
+    gap: 0.35rem;
     padding: 0.35rem 0.6rem;
     border: 1px solid var(--border-color);
     border-radius: var(--border-radius-sm);
@@ -537,14 +540,56 @@
     font-size: 0.75rem;
     font-family: inherit;
     cursor: pointer;
-    max-width: 160px;
+    max-width: 200px;
+    white-space: nowrap;
 
-    option { background: var(--color-bg-surface); }
-    &:focus { outline: none; border-color: var(--dracula-purple); }
+    span:first-of-type {
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    &:hover { border-color: rgba(189, 147, 249, 0.55); }
 
     @media (max-width: 768px) {
-        flex: 1 1 100%;
+        width: 100%;
         max-width: none;
+    }
+}
+
+.modelToggleExtra {
+    color: var(--dracula-comment);
+    flex-shrink: 0;
+}
+
+.modelToggleList {
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+    max-height: 240px;
+    overflow-y: auto;
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius-md);
+    padding: 0.3rem;
+    background: var(--color-bg-page);
+}
+
+.modelToggleRow {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.5rem;
+    padding: 0.45rem 0.55rem;
+    border-radius: var(--border-radius-sm);
+    font-size: 0.8rem;
+    color: var(--dracula-foreground);
+    cursor: pointer;
+
+    &:hover { background: rgba(98, 114, 164, 0.08); }
+
+    input[type='checkbox'] {
+        cursor: pointer;
+
+        &:disabled { cursor: not-allowed; opacity: 0.5; }
     }
 }
 
@@ -774,6 +819,17 @@
     margin-top: 3px;
     padding-left: 2px;
     line-height: 1;
+}
+
+.fallbackNotice {
+    align-self: flex-start;
+    margin-bottom: 4px;
+    padding: 0.3rem 0.6rem;
+    border-radius: var(--border-radius-sm);
+    border: 1px solid rgba(241, 250, 140, 0.3);
+    background: rgba(241, 250, 140, 0.08);
+    color: var(--dracula-yellow);
+    font-size: 0.7rem;
 }
 
 /* ─── Tool Call Cards ─── */

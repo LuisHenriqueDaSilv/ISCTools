@@ -36,7 +36,6 @@ export default function CookieConsent() {
                         <span className={styles.cookieListLabel}>Cookies utilizados:</span>
                         <ul>
                             <li><code>gemini_api_key</code> — chave de API do Google AI (Lamarzito)</li>
-                            <li><code>gemini_model</code> — modelo de IA selecionado</li>
                         </ul>
                     </div>
                 </div>
