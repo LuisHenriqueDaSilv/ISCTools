@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { Link, useNavigate, useParams, useLocation } from 'react-router-dom'
-import { SignIn } from '@phosphor-icons/react'
+import { SignIn, CircleNotch, WarningCircle } from '@phosphor-icons/react'
 import { useAuth } from '../../contexts/AuthContext'
 import {
     ConversationSummary,
@@ -34,6 +34,9 @@ export default function Lamarzito() {
     const [showSettings, setShowSettings] = useState(false)
     const [showApiKeyInfo, setShowApiKeyInfo] = useState(false)
     const [loading, setLoading] = useState(false)
+    const [messagesError, setMessagesError] = useState(false)
+    const [conversationsLoading, setConversationsLoading] = useState(false)
+    const [conversationsError, setConversationsError] = useState(false)
     const [pendingMessage, setPendingMessage] = useState<string | null>(null)
     const [mobileSidebarOpen, setMobileSidebarOpen] = useState(false)
     const [mobileSettingsOpen, setMobileSettingsOpen] = useState(false)
@@ -79,16 +82,21 @@ export default function Lamarzito() {
     }, [paramId])
 
     async function loadConversations() {
+        setConversationsLoading(true)
+        setConversationsError(false)
         try {
             const data = await fetchConversations()
             setConversations(data)
         } catch {
-            // ignore
+            setConversationsError(true)
+        } finally {
+            setConversationsLoading(false)
         }
     }
 
     async function loadMessages(id: string) {
         setLoading(true)
+        setMessagesError(false)
         try {
             const conv = await fetchConversation(id)
             setMessages(conv.messages.map(m => ({
@@ -106,6 +114,7 @@ export default function Lamarzito() {
             })))
         } catch {
             setMessages([])
+            setMessagesError(true)
         } finally {
             setLoading(false)
         }
@@ -184,6 +193,9 @@ export default function Lamarzito() {
                 onSelect={handleSelect}
                 onNew={handleNew}
                 mobileOpen={mobileSidebarOpen}
+                loading={conversationsLoading}
+                error={conversationsError}
+                onRetry={loadConversations}
             />
 
             {mobileSidebarOpen && (
@@ -209,7 +221,18 @@ export default function Lamarzito() {
                 />
 
                 {loading ? (
-                    <div className={styles.loadingState}>Carregando conversa...</div>
+                    <div className={styles.loadingState}>
+                        <CircleNotch size={28} weight="bold" className={styles.spinner} />
+                        <span>Carregando conversa...</span>
+                    </div>
+                ) : messagesError ? (
+                    <div className={styles.errorState} role="alert">
+                        <WarningCircle size={28} weight="fill" />
+                        <span>Não foi possível carregar esta conversa. Tente novamente.</span>
+                        <button className={styles.retryBtn} onClick={() => activeId && loadMessages(activeId)}>
+                            Tentar novamente
+                        </button>
+                    </div>
                 ) : (
                     <ChatArea
                         key={activeId ?? 'empty'}

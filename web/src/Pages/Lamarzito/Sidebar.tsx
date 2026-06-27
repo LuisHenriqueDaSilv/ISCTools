@@ -1,4 +1,4 @@
-import { Plus, ChatText } from '@phosphor-icons/react'
+import { Plus, ChatText, CircleNotch, WarningCircle } from '@phosphor-icons/react'
 import { ConversationSummary } from '../../services/chat'
 import styles from './styles.module.scss'
 
@@ -8,6 +8,9 @@ interface Props {
     onSelect: (id: string) => void
     onNew: () => void
     mobileOpen?: boolean
+    loading?: boolean
+    error?: boolean
+    onRetry?: () => void
 }
 
 function formatDate(dateStr: string): string {
@@ -21,7 +24,7 @@ function formatDate(dateStr: string): string {
     return date.toLocaleDateString('pt-BR', { day: '2-digit', month: 'short' })
 }
 
-export default function Sidebar({ conversations, activeId, onSelect, onNew, mobileOpen = false }: Props) {
+export default function Sidebar({ conversations, activeId, onSelect, onNew, mobileOpen = false, loading = false, error = false, onRetry }: Props) {
     return (
         <aside className={`${styles.sidebar} ${mobileOpen ? styles.sidebarMobileOpen : ''}`}>
             <div className={styles.sidebarTop}>
@@ -32,10 +35,27 @@ export default function Sidebar({ conversations, activeId, onSelect, onNew, mobi
             </div>
 
             <nav className={styles.convList}>
-                {conversations.length === 0 && (
+                {loading && (
+                    <div className={styles.convLoading}>
+                        <CircleNotch size={22} weight="bold" className={styles.spinner} />
+                        <span>Carregando conversas...</span>
+                    </div>
+                )}
+                {!loading && error && (
+                    <div className={styles.convError} role="alert">
+                        <WarningCircle size={22} weight="fill" />
+                        <span>Não foi possível carregar suas conversas.</span>
+                        {onRetry && (
+                            <button className={styles.retryBtn} onClick={onRetry}>
+                                Tentar novamente
+                            </button>
+                        )}
+                    </div>
+                )}
+                {!loading && !error && conversations.length === 0 && (
                     <p className={styles.emptyState}>você ainda não tem nenhuma conversa com o Lamarzito.</p>
                 )}
-                {conversations.map(conv => (
+                {!loading && !error && conversations.map(conv => (
                     <button
                         key={conv.id}
                         className={`${styles.convItem} ${conv.id === activeId ? styles.active : ''}`}
