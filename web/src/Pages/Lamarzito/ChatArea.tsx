@@ -9,7 +9,7 @@ import remarkMath from 'remark-math'
 import rehypeKatex from 'rehype-katex'
 import 'katex/dist/katex.min.css'
 import { getCookie } from '../../utils/cookies'
-import { streamMessage, retryMessage, SSEEvent, GeminiModel } from '../../services/chat'
+import { streamMessage, retryMessage, SSEEvent, ModelOption } from '../../services/chat'
 import styles from './styles.module.scss'
 
 export interface ChatMessage {
@@ -29,11 +29,14 @@ interface ToolCall {
     output: string
 }
 
+interface FallbackNotice {
+    message: string
+}
+
 interface Props {
     conversationId: string | null
     initialMessages: ChatMessage[]
-    selectedModel: string
-    models: GeminiModel[]
+    models: ModelOption[]
     onTitleChange?: (title: string) => void
     onRequestCreate?: (message: string) => void
     initialInput?: string
@@ -76,6 +79,9 @@ const SUGGESTIONS = [
 const SSE_ERROR_MESSAGES: Record<string, string> = {
     'gemini.exceeded_quota': 'Sua cota da API do Gemini foi excedida. Aguarde alguns minutos e tente novamente.',
     'gemini.invalid_api_key': 'Chave de API inválida ou sem permissão para o modelo selecionado. Verifique suas configurações.',
+    'gemini.model_unavailable': 'Modelo temporariamente indisponível.',
+    'gemini.all_models_exhausted': 'Todos os modelos ativos estão sem cota ou indisponíveis. Tente novamente em alguns minutos.',
+    'gemini.no_models_enabled': 'Nenhum modelo está ativo. Ative ao menos um nas configurações.',
 }
 
 function formatSseError(data: Record<string, unknown>): string {
@@ -108,7 +114,6 @@ function ToolCallCard({ call }: { call: ToolCall }) {
 export default function ChatArea({
     conversationId,
     initialMessages,
-    selectedModel,
     models,
     onTitleChange,
     onRequestCreate,
@@ -118,6 +123,7 @@ export default function ChatArea({
     const [messages, setMessages] = useState<ChatMessage[]>(initialMessages)
     const [input, setInput] = useState(initialInput ?? '')
     const [sending, setSending] = useState(false)
+    const [fallbackNotice, setFallbackNotice] = useState<FallbackNotice | null>(null)
     const bottomRef = useRef<HTMLDivElement>(null)
     const textareaRef = useRef<HTMLTextAreaElement>(null)
     const sendRef = useRef<() => Promise<void>>(async () => {})
@@ -151,9 +157,15 @@ export default function ChatArea({
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 
-    function modelAlias(modelId: string | null | undefined): string | null {
-        if (!modelId) return null
-        return models.find(m => m.id === modelId)?.alias ?? modelId
+    function modelAlias(slug: string | null | undefined): string | null {
+        if (!slug) return null
+        return models.find(m => m.slug === slug)?.name ?? slug
+    }
+
+    function showFallbackNotice(previousError: string | undefined, nextModel: string) {
+        const reason = previousError ? (SSE_ERROR_MESSAGES[previousError] ?? previousError) : 'indisponível'
+        setFallbackNotice({ message: `${reason} Tentando ${nextModel}…` })
+        window.setTimeout(() => setFallbackNotice(null), 6000)
     }
 
     function fillSuggestion(message: string) {
@@ -177,7 +189,6 @@ export default function ChatArea({
             return
         }
 
-        const model = selectedModel
         const apiKey = getCookie('gemini_api_key')
 
         if (!apiKey) {
@@ -187,8 +198,9 @@ export default function ChatArea({
 
         setInput('')
         if (textareaRef.current) textareaRef.current.style.height = 'auto'
-        setMessages(prev => [...prev, { role: 'user', content, llm_model: model }])
-        setMessages(prev => [...prev, { role: 'assistant', content: '', streaming: true, toolCalls: [], llm_model: model }])
+        setFallbackNotice(null)
+        setMessages(prev => [...prev, { role: 'user', content }])
+        setMessages(prev => [...prev, { role: 'assistant', content: '', streaming: true, toolCalls: [] }])
         setSending(true)
 
         const currentToolCalls: ToolCall[] = []
@@ -196,6 +208,17 @@ export default function ChatArea({
         const onEvent = (event: SSEEvent) => {
             if (event.type === 'title') {
                 onTitleChange?.(event.data.title as string)
+            } else if (event.type === 'model') {
+                const { name, slug, attempt, previous_error } = event.data as {
+                    name: string; slug: string; attempt: number; previous_error?: string
+                }
+                setMessages(prev => {
+                    const next = [...prev]
+                    const last = next[next.length - 1]
+                    if (last?.role === 'assistant') next[next.length - 1] = { ...last, llm_model: slug }
+                    return next
+                })
+                if (attempt > 1) showFallbackNotice(previous_error, name)
             } else if (event.type === 'token') {
                 setMessages(prev => {
                     const next = [...prev]
@@ -221,6 +244,7 @@ export default function ChatArea({
                     return next
                 })
             } else if (event.type === 'done') {
+                setFallbackNotice(null)
                 setMessages(prev => {
                     const next = [...prev]
                     const last = next[next.length - 1]
@@ -231,6 +255,7 @@ export default function ChatArea({
                 })
                 setSending(false)
             } else if (event.type === 'error') {
+                setFallbackNotice(null)
                 setMessages(prev => {
                     const next = [...prev]
                     const last = next[next.length - 1]
@@ -250,7 +275,7 @@ export default function ChatArea({
         }
 
         try {
-            const gen = streamMessage(conversationId, content, model, onEvent)
+            const gen = streamMessage(conversationId, content, onEvent)
             // eslint-disable-next-line @typescript-eslint/no-unused-vars
             for await (const _ of gen) { /* events processed in onEvent */ }
         } catch (err: unknown) {
@@ -281,20 +306,31 @@ export default function ChatArea({
     async function handleRetry() {
         if (!conversationId || sending) return
 
-        const model = selectedModel
         const apiKey = getCookie('gemini_api_key')
         if (!apiKey) {
             window.dispatchEvent(new CustomEvent('app:error', { detail: 'Configure sua Google API Key antes de enviar mensagens.' }))
             return
         }
 
-        setMessages(prev => [...prev, { role: 'assistant', content: '', streaming: true, toolCalls: [], llm_model: model }])
+        setFallbackNotice(null)
+        setMessages(prev => [...prev, { role: 'assistant', content: '', streaming: true, toolCalls: [] }])
         setSending(true)
 
         const currentToolCalls: ToolCall[] = []
 
         const onEvent = (event: SSEEvent) => {
-            if (event.type === 'token') {
+            if (event.type === 'model') {
+                const { name, slug, attempt, previous_error } = event.data as {
+                    name: string; slug: string; attempt: number; previous_error?: string
+                }
+                setMessages(prev => {
+                    const next = [...prev]
+                    const last = next[next.length - 1]
+                    if (last?.role === 'assistant') next[next.length - 1] = { ...last, llm_model: slug }
+                    return next
+                })
+                if (attempt > 1) showFallbackNotice(previous_error, name)
+            } else if (event.type === 'token') {
                 setMessages(prev => {
                     const next = [...prev]
                     const last = next[next.length - 1]
@@ -319,6 +355,7 @@ export default function ChatArea({
                     return next
                 })
             } else if (event.type === 'done') {
+                setFallbackNotice(null)
                 setMessages(prev => {
                     const next = [...prev]
                     const last = next[next.length - 1]
@@ -329,6 +366,7 @@ export default function ChatArea({
                 })
                 setSending(false)
             } else if (event.type === 'error') {
+                setFallbackNotice(null)
                 setMessages(prev => {
                     const next = [...prev]
                     const last = next[next.length - 1]
@@ -348,7 +386,7 @@ export default function ChatArea({
         }
 
         try {
-            const gen = retryMessage(conversationId, model, onEvent)
+            const gen = retryMessage(conversationId, onEvent)
             // eslint-disable-next-line @typescript-eslint/no-unused-vars
             for await (const _ of gen) { /* events processed in onEvent */ }
         } catch (err: unknown) {
@@ -419,6 +457,9 @@ export default function ChatArea({
                                     <ToolCallCard key={i} call={call} />
                                 ))}
                             </div>
+                        )}
+                        {msg.role === 'assistant' && msg.streaming && idx === messages.length - 1 && fallbackNotice && (
+                            <div className={styles.fallbackNotice}>{fallbackNotice.message}</div>
                         )}
                         <div className={`${styles.bubble} ${msg.isError ? styles.errorBubble : ''}`}>
                             {msg.role === 'assistant' ? (

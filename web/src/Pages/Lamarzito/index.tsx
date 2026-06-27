@@ -4,19 +4,19 @@ import { SignIn, CircleNotch, WarningCircle } from '@phosphor-icons/react'
 import { useAuth } from '../../contexts/AuthContext'
 import {
     ConversationSummary,
-    GeminiModel,
+    ModelOption,
     fetchConversation,
     fetchConversations,
     fetchModels,
+    toggleModel,
     createConversation,
 } from '../../services/chat'
-import { getCookie, setCookie } from '../../utils/cookies'
-import { useCookieConsent } from '../../contexts/CookieConsentContext'
 import Sidebar from './Sidebar'
 import ChatHeader from './ChatHeader'
 import ChatArea, { ChatMessage } from './ChatArea'
 import SettingsModal from './SettingsModal'
 import BYOAKInfoModal from './BYOAKInfoModal'
+import ModelsModal from './ModelsModal'
 import styles from './styles.module.scss'
 
 export default function Lamarzito() {
@@ -26,13 +26,12 @@ export default function Lamarzito() {
     const { conversationId: paramId } = useParams<{ conversationId?: string }>()
 
     const [conversations, setConversations] = useState<ConversationSummary[]>([])
-    const [models, setModels] = useState<GeminiModel[]>([])
-    const [selectedModel, setSelectedModel] = useState(getCookie('gemini_model') || '')
+    const [models, setModels] = useState<ModelOption[]>([])
     const [activeId, setActiveId] = useState<string | null>(null)
     const [messages, setMessages] = useState<ChatMessage[]>([])
-    const { isAllowed, requestConsent } = useCookieConsent()
     const [showSettings, setShowSettings] = useState(false)
     const [showApiKeyInfo, setShowApiKeyInfo] = useState(false)
+    const [showModels, setShowModels] = useState(false)
     const [loading, setLoading] = useState(false)
     const [messagesError, setMessagesError] = useState(false)
     const [conversationsLoading, setConversationsLoading] = useState(false)
@@ -43,16 +42,7 @@ export default function Lamarzito() {
 
     useEffect(() => {
         if (!user) return
-        fetchModels().then(list => {
-            setModels(list)
-            const cookieModel = getCookie('gemini_model')
-            const validIds = list.map(m => m.id)
-            if (!cookieModel || !validIds.includes(cookieModel)) {
-                const first = list[0]?.id ?? ''
-                setSelectedModel(first)
-                if (first && isAllowed) setCookie('gemini_model', first)
-            }
-        }).catch(() => {})
+        fetchModels().then(setModels).catch(() => {})
         loadConversations()
     }, [user])
 
@@ -163,9 +153,16 @@ export default function Lamarzito() {
         )
     }
 
-    function handleModelChange(model: string) {
-        setSelectedModel(model)
-        requestConsent(() => setCookie('gemini_model', model))
+    async function handleToggleModel(slug: string, enabled: boolean) {
+        const previous = models
+        setModels(prev => prev.map(m => (m.slug === slug ? { ...m, enabled } : m)))
+        try {
+            const updated = await toggleModel(slug, enabled)
+            setModels(updated)
+        } catch {
+            setModels(previous)
+            window.dispatchEvent(new CustomEvent('app:error', { detail: 'Não foi possível atualizar o modelo. Tente novamente.' }))
+        }
     }
 
     const activeTitle = activeId
@@ -210,8 +207,7 @@ export default function Lamarzito() {
                 <ChatHeader
                     title={activeTitle}
                     models={models}
-                    selectedModel={selectedModel}
-                    onModelChange={handleModelChange}
+                    onOpenModels={() => { setMobileSettingsOpen(false); setShowModels(true) }}
                     onOpenApiKey={() => { setMobileSettingsOpen(false); setShowSettings(true) }}
                     onOpenApiKeyInfo={() => { setMobileSettingsOpen(false); setShowApiKeyInfo(true) }}
                     mobileSidebarOpen={mobileSidebarOpen}
@@ -238,7 +234,6 @@ export default function Lamarzito() {
                         key={activeId ?? 'empty'}
                         conversationId={activeId}
                         initialMessages={messages}
-                        selectedModel={selectedModel}
                         models={models}
                         onTitleChange={handleTitleChange}
                         onRequestCreate={handleRequestCreate}
@@ -259,6 +254,14 @@ export default function Lamarzito() {
                 <BYOAKInfoModal
                     onClose={() => setShowApiKeyInfo(false)}
                     onOpenSettings={() => setShowSettings(true)}
+                />
+            )}
+
+            {showModels && (
+                <ModelsModal
+                    models={models}
+                    onToggleModel={handleToggleModel}
+                    onClose={() => setShowModels(false)}
                 />
             )}
         </div>

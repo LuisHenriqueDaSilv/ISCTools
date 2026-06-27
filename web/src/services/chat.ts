@@ -33,18 +33,25 @@ export interface ConversationDetail {
     messages: Message[]
 }
 
-export interface GeminiModel {
-    id: string
-    alias: string
+export interface ModelOption {
+    slug: string
+    name: string
+    priority: number
+    enabled: boolean
 }
 
 export interface SSEEvent {
-    type: 'title' | 'token' | 'tool_call' | 'done' | 'error'
+    type: 'title' | 'token' | 'tool_call' | 'done' | 'error' | 'model'
     data: Record<string, unknown>
 }
 
-export async function fetchModels(): Promise<GeminiModel[]> {
+export async function fetchModels(): Promise<ModelOption[]> {
     const { data } = await api.get('/chat/models')
+    return data
+}
+
+export async function toggleModel(slug: string, enabled: boolean): Promise<ModelOption[]> {
+    const { data } = await api.patch(`/chat/models/${slug}`, { enabled })
     return data
 }
 
@@ -65,7 +72,6 @@ export async function fetchConversation(id: string): Promise<ConversationDetail>
 
 export async function* retryMessage(
     conversationId: string,
-    model: string,
     onEvent: (event: SSEEvent) => void,
 ): AsyncGenerator<void> {
     const token = getCookie('isctools_token')
@@ -80,7 +86,7 @@ export async function* retryMessage(
                 Authorization: `Bearer ${token}`,
                 'X-Google-Api-Key': apiKey,
             },
-            body: JSON.stringify({ model }),
+            body: JSON.stringify({}),
         },
     )
 
@@ -125,7 +131,6 @@ export async function* retryMessage(
 export async function* streamMessage(
     conversationId: string,
     content: string,
-    model: string,
     onEvent: (event: SSEEvent) => void,
 ): AsyncGenerator<void> {
     const token = getCookie('isctools_token')
@@ -140,7 +145,7 @@ export async function* streamMessage(
                 Authorization: `Bearer ${token}`,
                 'X-Google-Api-Key': apiKey,
             },
-            body: JSON.stringify({ content, model }),
+            body: JSON.stringify({ content }),
         },
     )
 

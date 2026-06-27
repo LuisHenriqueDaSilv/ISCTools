@@ -1,13 +1,12 @@
 import { useEffect, useRef } from 'react'
-import { Key, Question, CaretDown, CaretUp, Gear, X } from '@phosphor-icons/react'
-import { GeminiModel } from '../../services/chat'
+import { Key, Question, CaretDown, CaretUp, Gear, X, Robot } from '@phosphor-icons/react'
+import { ModelOption } from '../../services/chat'
 import styles from './styles.module.scss'
 
 interface Props {
     title: string
-    models: GeminiModel[]
-    selectedModel: string
-    onModelChange: (model: string) => void
+    models: ModelOption[]
+    onOpenModels: () => void
     onOpenApiKey: () => void
     onOpenApiKeyInfo: () => void
     mobileSidebarOpen: boolean
@@ -19,8 +18,7 @@ interface Props {
 export default function ChatHeader({
     title,
     models,
-    selectedModel,
-    onModelChange,
+    onOpenModels,
     onOpenApiKey,
     onOpenApiKeyInfo,
     mobileSidebarOpen,
@@ -41,6 +39,10 @@ export default function ChatHeader({
         document.addEventListener('mousedown', onDocClick)
         return () => document.removeEventListener('mousedown', onDocClick)
     }, [mobileSettingsOpen, onToggleMobileSettings])
+
+    const enabledModels = [...models].filter(m => m.enabled).sort((a, b) => a.priority - b.priority)
+    const primaryModel = enabledModels[0]
+    const extraCount = enabledModels.length - 1
 
     return (
         <div className={styles.chatHeader}>
@@ -72,15 +74,11 @@ export default function ChatHeader({
                 ref={settingsRef}
                 className={`${styles.headerControls} ${mobileSettingsOpen ? styles.headerControlsOpen : ''}`}
             >
-                <select
-                    className={styles.headerModelSelect}
-                    value={selectedModel}
-                    onChange={e => onModelChange(e.target.value)}
-                >
-                    {models.map(m => (
-                        <option key={m.id} value={m.id}>{m.alias}</option>
-                    ))}
-                </select>
+                <button type="button" className={styles.modelToggleBtn} onClick={onOpenModels}>
+                    <Robot size={14} />
+                    <span>{primaryModel ? primaryModel.name : 'Nenhum modelo'}</span>
+                    {extraCount > 0 && <span className={styles.modelToggleExtra}>+{extraCount}</span>}
+                </button>
                 <button className={styles.apiKeyBtn} onClick={onOpenApiKey}>
                     <Key size={14} />
                     API Key
