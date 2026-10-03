@@ -1072,3 +1072,49 @@
 
     &:hover { background-color: var(--color-primary-hover); color: #1e1f29; }
 }
+
+
+.keyBannerBtn {
+    flex-shrink: 0;
+    padding: 0.3rem 0.7rem;
+    border: none;
+    border-radius: var(--border-radius-sm);
+    background: var(--dracula-purple);
+    color: var(--dracula-bg, #282a36);
+    font-size: 0.75rem;
+    font-weight: 600;
+    font-family: inherit;
+    cursor: pointer;
+    white-space: nowrap;
+}
+
+.inputRowLocked {
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    padding: 0.75rem;
+
+    .keyBannerBtn {
+        padding: 0.45rem 1rem;
+        font-size: 0.8rem;
+    }
+}
+
+.chatInputLocked {
+    flex: 0 0 auto;
+    width: 100%;
+    text-align: center;
+    color: #fff;
+
+    &:disabled {
+        color: #fff;
+        opacity: 1;
+    }
+
+    &::placeholder,
+    &:disabled::placeholder {
+        color: #fff;
+        opacity: 1;
+    }
+}

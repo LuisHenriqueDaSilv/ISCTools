@@ -16,7 +16,6 @@ import Sidebar from './Sidebar'
 import ChatHeader from './ChatHeader'
 import ChatArea, { ChatMessage } from './ChatArea'
 import SettingsModal from './SettingsModal'
-import BYOAKInfoModal from './BYOAKInfoModal'
 import styles from './styles.module.scss'
 
 export default function Lamarzito() {
@@ -32,7 +31,6 @@ export default function Lamarzito() {
     const [messages, setMessages] = useState<ChatMessage[]>([])
     const { isAllowed, requestConsent } = useCookieConsent()
     const [showSettings, setShowSettings] = useState(false)
-    const [showApiKeyInfo, setShowApiKeyInfo] = useState(false)
     const [loading, setLoading] = useState(false)
     const [pendingMessage, setPendingMessage] = useState<string | null>(null)
 
@@ -188,7 +186,6 @@ export default function Lamarzito() {
                     selectedModel={selectedModel}
                     onModelChange={handleModelChange}
                     onOpenApiKey={() => setShowSettings(true)}
-                    onOpenApiKeyInfo={() => setShowApiKeyInfo(true)}
                 />
 
                 {loading ? (
@@ -204,6 +201,7 @@ export default function Lamarzito() {
                         onRequestCreate={handleRequestCreate}
                         initialInput={pendingMessage ?? undefined}
                         autoSend={!!pendingMessage}
+                        onConfigureKey={() => setShowSettings(true)}
                     />
                 )}
             </main>
@@ -211,14 +209,6 @@ export default function Lamarzito() {
             {showSettings && (
                 <SettingsModal
                     onClose={() => setShowSettings(false)}
-                    onOpenInfo={() => { setShowSettings(false); setShowApiKeyInfo(true) }}
-                />
-            )}
-
-            {showApiKeyInfo && (
-                <BYOAKInfoModal
-                    onClose={() => setShowApiKeyInfo(false)}
-                    onOpenSettings={() => setShowSettings(true)}
                 />
             )}
         </div>
