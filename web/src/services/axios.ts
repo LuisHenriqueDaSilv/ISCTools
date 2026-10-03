@@ -64,7 +64,6 @@ api.interceptors.response.use(
     (error: unknown) => {
         if (axios.isCancel(error)) return Promise.reject(error)
 
-        // o type guard de isCancel estreita `error` para `never`; o cast restaura o AxiosError
         const axiosError = error as AxiosError
         if (axiosError.response?.status === 401) {
             dispatchSessionExpired()
@@ -72,7 +71,7 @@ api.interceptors.response.use(
             dispatchError(extractMessage(axiosError))
         }
 
-        return Promise.reject(error)
+        return Promise.reject(axiosError)
     }
 )
 
