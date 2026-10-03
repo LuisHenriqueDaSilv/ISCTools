@@ -61,13 +61,15 @@ export function dispatchError(message: string) {
 
 api.interceptors.response.use(
     response => response,
-    (error: AxiosError) => {
+    (error: unknown) => {
         if (axios.isCancel(error)) return Promise.reject(error)
 
-        if (error.response?.status === 401) {
+        // o type guard de isCancel estreita `error` para `never`; o cast restaura o AxiosError
+        const axiosError = error as AxiosError
+        if (axiosError.response?.status === 401) {
             dispatchSessionExpired()
         } else {
-            dispatchError(extractMessage(error))
+            dispatchError(extractMessage(axiosError))
         }
 
         return Promise.reject(error)
