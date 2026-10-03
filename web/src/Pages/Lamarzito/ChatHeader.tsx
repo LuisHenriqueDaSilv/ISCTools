@@ -1,32 +1,87 @@
-import { Key } from '@phosphor-icons/react'
-import { GeminiModel } from '../../services/chat'
+import { useEffect, useRef } from 'react'
+import { Key, CaretDown, CaretUp, Gear, X, Robot } from '@phosphor-icons/react'
+import { ModelOption } from '../../services/chat'
 import styles from './styles.module.scss'
 
 interface Props {
     title: string
-    models: GeminiModel[]
-    selectedModel: string
-    onModelChange: (model: string) => void
+    models: ModelOption[]
+    onOpenModels: () => void
     onOpenApiKey: () => void
+    mobileSidebarOpen: boolean
+    onToggleMobileSidebar: () => void
+    mobileSettingsOpen: boolean
+    onToggleMobileSettings: () => void
 }
 
-export default function ChatHeader({ title, models, selectedModel, onModelChange, onOpenApiKey }: Props) {
+export default function ChatHeader({
+    title,
+    models,
+    onOpenModels,
+    onOpenApiKey,
+    mobileSidebarOpen,
+    onToggleMobileSidebar,
+    mobileSettingsOpen,
+    onToggleMobileSettings,
+}: Props) {
+    const settingsRef = useRef<HTMLDivElement>(null)
+
+    useEffect(() => {
+        if (!mobileSettingsOpen) return
+        function onDocClick(e: MouseEvent) {
+            if (!settingsRef.current) return
+            if (!settingsRef.current.contains(e.target as Node)) {
+                onToggleMobileSettings()
+            }
+        }
+        document.addEventListener('mousedown', onDocClick)
+        return () => document.removeEventListener('mousedown', onDocClick)
+    }, [mobileSettingsOpen, onToggleMobileSettings])
+
+    const enabledModels = [...models].filter(m => m.enabled).sort((a, b) => a.priority - b.priority)
+    const primaryModel = enabledModels[0]
+    const extraCount = enabledModels.length - 1
+
     return (
         <div className={styles.chatHeader}>
-            <span className={styles.chatHeaderTitle}>{title || 'Novo chat'}</span>
-            <select
-                className={styles.headerModelSelect}
-                value={selectedModel}
-                onChange={e => onModelChange(e.target.value)}
+            <button
+                type="button"
+                className={`${styles.headerSettingsBtn} ${mobileSettingsOpen ? styles.headerSettingsBtnActive : ''}`}
+                onClick={onToggleMobileSettings}
+                aria-expanded={mobileSettingsOpen}
+                aria-label="Configurações do chat"
+                title="Configurações"
             >
-                {models.map(m => (
-                    <option key={m.id} value={m.id}>{m.alias}</option>
-                ))}
-            </select>
-            <button className={styles.apiKeyBtn} onClick={onOpenApiKey}>
-                <Key size={14} />
-                Chave de API do Google
+                {mobileSettingsOpen ? <X size={16} /> : <Gear size={16} />}
             </button>
+
+            <button
+                type="button"
+                className={styles.chatHeaderTitleBtn}
+                onClick={onToggleMobileSidebar}
+                aria-expanded={mobileSidebarOpen}
+                aria-label={mobileSidebarOpen ? 'Fechar lista de chats' : 'Abrir lista de chats'}
+            >
+                <span className={styles.chatHeaderTitle}>{title || 'Novo chat'}</span>
+                <span className={styles.chatHeaderTitleCaret} aria-hidden>
+                    {mobileSidebarOpen ? <CaretUp size={14} /> : <CaretDown size={14} />}
+                </span>
+            </button>
+
+            <div
+                ref={settingsRef}
+                className={`${styles.headerControls} ${mobileSettingsOpen ? styles.headerControlsOpen : ''}`}
+            >
+                <button type="button" className={styles.modelToggleBtn} onClick={onOpenModels}>
+                    <Robot size={14} />
+                    <span>{primaryModel ? primaryModel.name : 'Nenhum modelo'}</span>
+                    {extraCount > 0 && <span className={styles.modelToggleExtra}>+{extraCount}</span>}
+                </button>
+                <button className={styles.apiKeyBtn} onClick={onOpenApiKey}>
+                    <Key size={14} />
+                    Chave de API do Google
+                </button>
+            </div>
         </div>
     )
 }

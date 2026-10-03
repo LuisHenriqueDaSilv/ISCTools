@@ -70,3 +70,44 @@
   display: flex;
   justify-content: center;
 }
+
+.loadingState {
+  width: 100%;
+  min-height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6rem;
+  font-size: var(--font-size-sm);
+  color: var(--dracula-comment);
+}
+
+.spinner {
+  color: var(--dracula-purple);
+  animation: spin 0.8s linear infinite;
+}
+
+.errorState {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.6rem 0.85rem;
+  border-radius: var(--border-radius-md);
+  background: rgba(255, 85, 85, 0.1);
+  border: 1px solid rgba(255, 85, 85, 0.3);
+  color: var(--dracula-red);
+  font-size: var(--font-size-sm);
+  line-height: 1.4;
+  text-align: left;
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}

@@ -1,7 +1,7 @@
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { useNavigate, useLocation } from 'react-router-dom'
 import { GoogleLogin } from '@react-oauth/google'
-import { SquaresFour } from '@phosphor-icons/react'
+import { SquaresFour, CircleNotch, WarningCircle } from '@phosphor-icons/react'
 import { useAuth } from '../../contexts/AuthContext'
 import styles from './styles.module.scss'
 
@@ -9,6 +9,8 @@ export default function Login() {
   const { login, user } = useAuth()
   const navigate = useNavigate()
   const location = useLocation()
+  const [isLoggingIn, setIsLoggingIn] = useState(false)
+  const [hasError, setHasError] = useState(false)
   const from = (location.state as { from?: { pathname: string } })?.from?.pathname ?? '/'
 
   useEffect(() => {
@@ -16,11 +18,17 @@ export default function Login() {
   }, [user, navigate, from])
 
   async function handleSuccess(response: { credential?: string }) {
-    if (!response.credential) return
+    if (!response.credential) {
+      setHasError(true)
+      return
+    }
+    setHasError(false)
+    setIsLoggingIn(true)
     try {
       await login(response.credential)
     } catch {
-      // future: show toast error
+      setHasError(true)
+      setIsLoggingIn(false)
     }
   }
 
@@ -37,15 +45,28 @@ export default function Login() {
         <p className={styles.subtitle}>
           Faça login para acessar as ferramentas de arquitetura de computadores.
         </p>
-        <div className={styles.googleButton}>
-          <GoogleLogin
-            onSuccess={handleSuccess}
-            onError={() => undefined}
-            useOneTap
-            size="large"
-            width="300"
-          />
-        </div>
+        {isLoggingIn ? (
+          <div className={styles.loadingState}>
+            <CircleNotch size={22} weight="bold" className={styles.spinner} />
+            <span>Efetuando login...</span>
+          </div>
+        ) : (
+          <div className={styles.googleButton}>
+            <GoogleLogin
+              onSuccess={handleSuccess}
+              onError={() => setHasError(true)}
+              useOneTap
+              size="large"
+              width="300"
+            />
+          </div>
+        )}
+        {hasError && !isLoggingIn && (
+          <div className={styles.errorState} role="alert">
+            <WarningCircle size={20} weight="fill" />
+            <span>Não foi possível efetuar o login. Tente novamente.</span>
+          </div>
+        )}
       </div>
     </div>
   )

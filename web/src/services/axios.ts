@@ -1,16 +1,17 @@
 import axios, { AxiosError } from "axios"
+import { getCookie } from "../utils/cookies"
 
 const api = axios.create({
     baseURL: import.meta.env.VITE_API_URL
 })
 
-export function setAuthToken(token: string | null) {
+api.interceptors.request.use(config => {
+    const token = getCookie('isctools_token')
     if (token) {
-        api.defaults.headers.common['Authorization'] = `Bearer ${token}`
-    } else {
-        delete api.defaults.headers.common['Authorization']
+        config.headers.Authorization = `Bearer ${token}`
     }
-}
+    return config
+})
 
 // ─── Session expired (401) ────────────────────────────────────────────────────
 

@@ -1,21 +1,21 @@
 import { useEffect, useState } from 'react'
 import { Link, useNavigate, useParams, useLocation } from 'react-router-dom'
-import { SignIn } from '@phosphor-icons/react'
+import { SignIn, CircleNotch, WarningCircle } from '@phosphor-icons/react'
 import { useAuth } from '../../contexts/AuthContext'
 import {
     ConversationSummary,
-    GeminiModel,
+    ModelOption,
     fetchConversation,
     fetchConversations,
     fetchModels,
+    toggleModel,
     createConversation,
 } from '../../services/chat'
-import { getCookie, setCookie } from '../../utils/cookies'
-import { useCookieConsent } from '../../contexts/CookieConsentContext'
 import Sidebar from './Sidebar'
 import ChatHeader from './ChatHeader'
 import ChatArea, { ChatMessage } from './ChatArea'
 import SettingsModal from './SettingsModal'
+import ModelsModal from './ModelsModal'
 import styles from './styles.module.scss'
 
 export default function Lamarzito() {
@@ -25,27 +25,22 @@ export default function Lamarzito() {
     const { conversationId: paramId } = useParams<{ conversationId?: string }>()
 
     const [conversations, setConversations] = useState<ConversationSummary[]>([])
-    const [models, setModels] = useState<GeminiModel[]>([])
-    const [selectedModel, setSelectedModel] = useState(getCookie('gemini_model') || '')
+    const [models, setModels] = useState<ModelOption[]>([])
     const [activeId, setActiveId] = useState<string | null>(null)
     const [messages, setMessages] = useState<ChatMessage[]>([])
-    const { isAllowed, requestConsent } = useCookieConsent()
     const [showSettings, setShowSettings] = useState(false)
+    const [showModels, setShowModels] = useState(false)
     const [loading, setLoading] = useState(false)
+    const [messagesError, setMessagesError] = useState(false)
+    const [conversationsLoading, setConversationsLoading] = useState(false)
+    const [conversationsError, setConversationsError] = useState(false)
     const [pendingMessage, setPendingMessage] = useState<string | null>(null)
+    const [mobileSidebarOpen, setMobileSidebarOpen] = useState(false)
+    const [mobileSettingsOpen, setMobileSettingsOpen] = useState(false)
 
     useEffect(() => {
         if (!user) return
-        fetchModels().then(list => {
-            setModels(list)
-            const cookieModel = getCookie('gemini_model')
-            const validIds = list.map(m => m.id)
-            if (!cookieModel || !validIds.includes(cookieModel)) {
-                const first = list[0]?.id ?? ''
-                setSelectedModel(first)
-                if (first && isAllowed) setCookie('gemini_model', first)
-            }
-        }).catch(() => {})
+        fetchModels().then(setModels).catch(() => {})
         loadConversations()
     }, [user])
 
@@ -75,16 +70,21 @@ export default function Lamarzito() {
     }, [paramId])
 
     async function loadConversations() {
+        setConversationsLoading(true)
+        setConversationsError(false)
         try {
             const data = await fetchConversations()
             setConversations(data)
         } catch {
-            // ignore
+            setConversationsError(true)
+        } finally {
+            setConversationsLoading(false)
         }
     }
 
     async function loadMessages(id: string) {
         setLoading(true)
+        setMessagesError(false)
         try {
             const conv = await fetchConversation(id)
             setMessages(conv.messages.map(m => ({
@@ -102,6 +102,7 @@ export default function Lamarzito() {
             })))
         } catch {
             setMessages([])
+            setMessagesError(true)
         } finally {
             setLoading(false)
         }
@@ -116,6 +117,7 @@ export default function Lamarzito() {
                 updated_at: conv.updated_at,
             }
             setConversations(prev => [summary, ...prev])
+            setMobileSidebarOpen(false)
             navigate(`/lamarzito/${conv.id}`)
         } catch {
             // ignore
@@ -138,6 +140,7 @@ export default function Lamarzito() {
     }
 
     function handleSelect(id: string) {
+        setMobileSidebarOpen(false)
         navigate(`/lamarzito/${id}`)
     }
 
@@ -148,9 +151,16 @@ export default function Lamarzito() {
         )
     }
 
-    function handleModelChange(model: string) {
-        setSelectedModel(model)
-        requestConsent(() => setCookie('gemini_model', model))
+    async function handleToggleModel(slug: string, enabled: boolean) {
+        const previous = models
+        setModels(prev => prev.map(m => (m.slug === slug ? { ...m, enabled } : m)))
+        try {
+            const updated = await toggleModel(slug, enabled)
+            setModels(updated)
+        } catch {
+            setModels(previous)
+            window.dispatchEvent(new CustomEvent('app:error', { detail: 'Não foi possível atualizar o modelo. Tente novamente.' }))
+        }
     }
 
     const activeTitle = activeId
@@ -177,25 +187,50 @@ export default function Lamarzito() {
                 activeId={activeId}
                 onSelect={handleSelect}
                 onNew={handleNew}
+                mobileOpen={mobileSidebarOpen}
+                loading={conversationsLoading}
+                error={conversationsError}
+                onRetry={loadConversations}
             />
+
+            {mobileSidebarOpen && (
+                <div
+                    className={styles.mobileSidebarBackdrop}
+                    aria-hidden
+                    onClick={() => setMobileSidebarOpen(false)}
+                />
+            )}
 
             <main className={styles.chatMain}>
                 <ChatHeader
                     title={activeTitle}
                     models={models}
-                    selectedModel={selectedModel}
-                    onModelChange={handleModelChange}
-                    onOpenApiKey={() => setShowSettings(true)}
+                    onOpenModels={() => { setMobileSettingsOpen(false); setShowModels(true) }}
+                    onOpenApiKey={() => { setMobileSettingsOpen(false); setShowSettings(true) }}
+                    mobileSidebarOpen={mobileSidebarOpen}
+                    onToggleMobileSidebar={() => setMobileSidebarOpen(v => !v)}
+                    mobileSettingsOpen={mobileSettingsOpen}
+                    onToggleMobileSettings={() => setMobileSettingsOpen(v => !v)}
                 />
 
                 {loading ? (
-                    <div className={styles.loadingState}>Carregando conversa...</div>
+                    <div className={styles.loadingState}>
+                        <CircleNotch size={28} weight="bold" className={styles.spinner} />
+                        <span>Carregando conversa...</span>
+                    </div>
+                ) : messagesError ? (
+                    <div className={styles.errorState} role="alert">
+                        <WarningCircle size={28} weight="fill" />
+                        <span>Não foi possível carregar esta conversa. Tente novamente.</span>
+                        <button className={styles.retryBtn} onClick={() => activeId && loadMessages(activeId)}>
+                            Tentar novamente
+                        </button>
+                    </div>
                 ) : (
                     <ChatArea
                         key={activeId ?? 'empty'}
                         conversationId={activeId}
                         initialMessages={messages}
-                        selectedModel={selectedModel}
                         models={models}
                         onTitleChange={handleTitleChange}
                         onRequestCreate={handleRequestCreate}
@@ -209,6 +244,14 @@ export default function Lamarzito() {
             {showSettings && (
                 <SettingsModal
                     onClose={() => setShowSettings(false)}
+                />
+            )}
+
+            {showModels && (
+                <ModelsModal
+                    models={models}
+                    onToggleModel={handleToggleModel}
+                    onClose={() => setShowModels(false)}
                 />
             )}
         </div>

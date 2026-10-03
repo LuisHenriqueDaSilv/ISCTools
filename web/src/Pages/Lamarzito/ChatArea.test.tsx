@@ -2,14 +2,13 @@ import { render, screen, fireEvent } from '@testing-library/react'
 import { afterEach, describe, expect, it, vi } from 'vitest'
 import ChatArea from './ChatArea'
 
-const models = [{ id: 'gemini-test', alias: 'Teste' }]
+const models = [{ slug: 'gemini-test', name: 'Teste', priority: 1, enabled: true }]
 
 function renderChat(onConfigureKey = vi.fn(), onRequestCreate = vi.fn()) {
     render(
         <ChatArea
             conversationId={null}
             initialMessages={[]}
-            selectedModel="gemini-test"
             models={models}
             onRequestCreate={onRequestCreate}
             onConfigureKey={onConfigureKey}
