@@ -172,6 +172,8 @@ export default function ChatArea({
     }
 
     function fillSuggestion(message: string) {
+        // sem chave o campo está bloqueado e mostra o aviso de configuração
+        if (!hasApiKey) return
         setInput(message)
         textareaRef.current?.focus()
         // update height for pre-filled text

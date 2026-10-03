@@ -51,6 +51,30 @@ describe('ChatArea — chave de API do Google', () => {
         expect(onRequestCreate).not.toHaveBeenCalled()
     })
 
+    it('sem chave: clicar em sugestão não preenche o campo nem cria conversa', () => {
+        clearKey()
+        const { onRequestCreate } = renderChat()
+
+        fireEvent.click(screen.getByRole('button', { name: /Conversão de bases/ }))
+
+        const input = screen.getByRole('textbox')
+        expect(input).toHaveValue('')
+        expect(input).toHaveAttribute('placeholder', expect.stringContaining('Configure sua Chave de API'))
+        expect(screen.getByRole('button', { name: 'Configurar chave' })).toBeInTheDocument()
+        expect(onRequestCreate).not.toHaveBeenCalled()
+    })
+
+    it('com chave: clicar em sugestão preenche o campo', () => {
+        setKey('AIza-chave-de-teste')
+        renderChat()
+
+        fireEvent.click(screen.getByRole('button', { name: /Conversão de bases/ }))
+
+        expect(screen.getByRole('textbox')).toHaveValue(
+            'Explique as conversões entre bases numéricas (binário, octal, decimal, hexadecimal) com exemplos práticos.',
+        )
+    })
+
     it('com chave: campo habilitado, sem botão de configurar, e envio liberado', () => {
         setKey('AIza-chave-de-teste')
         const { onRequestCreate } = renderChat()
