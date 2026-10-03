@@ -1,4 +1,4 @@
-import { Key, Question } from '@phosphor-icons/react'
+import { Key } from '@phosphor-icons/react'
 import { GeminiModel } from '../../services/chat'
 import styles from './styles.module.scss'
 
@@ -8,10 +8,9 @@ interface Props {
     selectedModel: string
     onModelChange: (model: string) => void
     onOpenApiKey: () => void
-    onOpenApiKeyInfo: () => void
 }
 
-export default function ChatHeader({ title, models, selectedModel, onModelChange, onOpenApiKey, onOpenApiKeyInfo }: Props) {
+export default function ChatHeader({ title, models, selectedModel, onModelChange, onOpenApiKey }: Props) {
     return (
         <div className={styles.chatHeader}>
             <span className={styles.chatHeaderTitle}>{title || 'Novo chat'}</span>
@@ -26,14 +25,7 @@ export default function ChatHeader({ title, models, selectedModel, onModelChange
             </select>
             <button className={styles.apiKeyBtn} onClick={onOpenApiKey}>
                 <Key size={14} />
-                API Key
-            </button>
-            <button
-                className={styles.iconBtn}
-                onClick={onOpenApiKeyInfo}
-                title="Como funciona o sistema de API Key"
-            >
-                <Question size={16} />
+                Chave de API do Google
             </button>
         </div>
     )
