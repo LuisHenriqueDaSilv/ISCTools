@@ -66,3 +66,17 @@
         color: var(--dracula-foreground);
     }
 }
+
+.actionBtn {
+    flex-shrink: 0;
+    padding: 0.3rem 0.6rem;
+    border: 1px solid rgba(189, 147, 249, 0.4);
+    border-radius: var(--border-radius-sm);
+    background: rgba(189, 147, 249, 0.1);
+    color: var(--dracula-purple);
+    font-size: 0.75rem;
+    font-weight: 600;
+    font-family: inherit;
+    cursor: pointer;
+    white-space: nowrap;
+}

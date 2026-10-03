@@ -2,9 +2,18 @@ import { useEffect, useState } from 'react'
 import { X, Warning } from '@phosphor-icons/react'
 import styles from './styles.module.scss'
 
-interface Toast {
-    id: number
+interface ToastAction {
+    label: string
+    onClick: () => void
+}
+
+interface ToastDetail {
     message: string
+    action?: ToastAction
+}
+
+interface Toast extends ToastDetail {
+    id: number
 }
 
 let _counter = 0
@@ -15,9 +24,10 @@ export default function ToastContainer() {
 
     useEffect(() => {
         function handleError(e: Event) {
-            const message = (e as CustomEvent<string>).detail
+            const detail = (e as CustomEvent<string | ToastDetail>).detail
+            const toast = typeof detail === 'string' ? { message: detail } : detail
             const id = ++_counter
-            setToasts(prev => [...prev, { id, message }])
+            setToasts(prev => [...prev, { id, ...toast }])
             setTimeout(() => dismiss(id), DISMISS_MS)
         }
 
@@ -37,6 +47,14 @@ export default function ToastContainer() {
                 <div key={toast.id} className={styles.toast}>
                     <Warning size={16} weight="fill" className={styles.icon} />
                     <span className={styles.message}>{toast.message}</span>
+                    {toast.action && (
+                        <button
+                            className={styles.actionBtn}
+                            onClick={() => { toast.action?.onClick(); dismiss(toast.id) }}
+                        >
+                            {toast.action.label}
+                        </button>
+                    )}
                     <button
                         className={styles.closeBtn}
                         onClick={() => dismiss(toast.id)}

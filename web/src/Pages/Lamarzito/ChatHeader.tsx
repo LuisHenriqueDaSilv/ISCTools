@@ -1,5 +1,5 @@
 import { useEffect, useRef } from 'react'
-import { Key, Question, CaretDown, CaretUp, Gear, X, Robot } from '@phosphor-icons/react'
+import { Key, CaretDown, CaretUp, Gear, X, Robot } from '@phosphor-icons/react'
 import { ModelOption } from '../../services/chat'
 import styles from './styles.module.scss'
 
@@ -8,7 +8,6 @@ interface Props {
     models: ModelOption[]
     onOpenModels: () => void
     onOpenApiKey: () => void
-    onOpenApiKeyInfo: () => void
     mobileSidebarOpen: boolean
     onToggleMobileSidebar: () => void
     mobileSettingsOpen: boolean
@@ -20,7 +19,6 @@ export default function ChatHeader({
     models,
     onOpenModels,
     onOpenApiKey,
-    onOpenApiKeyInfo,
     mobileSidebarOpen,
     onToggleMobileSidebar,
     mobileSettingsOpen,
@@ -81,14 +79,7 @@ export default function ChatHeader({
                 </button>
                 <button className={styles.apiKeyBtn} onClick={onOpenApiKey}>
                     <Key size={14} />
-                    API Key
-                </button>
-                <button
-                    className={styles.iconBtn}
-                    onClick={onOpenApiKeyInfo}
-                    title="Como funciona o sistema de API Key"
-                >
-                    <Question size={16} />
+                    Chave de API do Google
                 </button>
             </div>
         </div>

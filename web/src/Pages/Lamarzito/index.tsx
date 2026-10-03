@@ -15,7 +15,6 @@ import Sidebar from './Sidebar'
 import ChatHeader from './ChatHeader'
 import ChatArea, { ChatMessage } from './ChatArea'
 import SettingsModal from './SettingsModal'
-import BYOAKInfoModal from './BYOAKInfoModal'
 import ModelsModal from './ModelsModal'
 import styles from './styles.module.scss'
 
@@ -30,7 +29,6 @@ export default function Lamarzito() {
     const [activeId, setActiveId] = useState<string | null>(null)
     const [messages, setMessages] = useState<ChatMessage[]>([])
     const [showSettings, setShowSettings] = useState(false)
-    const [showApiKeyInfo, setShowApiKeyInfo] = useState(false)
     const [showModels, setShowModels] = useState(false)
     const [loading, setLoading] = useState(false)
     const [messagesError, setMessagesError] = useState(false)
@@ -209,7 +207,6 @@ export default function Lamarzito() {
                     models={models}
                     onOpenModels={() => { setMobileSettingsOpen(false); setShowModels(true) }}
                     onOpenApiKey={() => { setMobileSettingsOpen(false); setShowSettings(true) }}
-                    onOpenApiKeyInfo={() => { setMobileSettingsOpen(false); setShowApiKeyInfo(true) }}
                     mobileSidebarOpen={mobileSidebarOpen}
                     onToggleMobileSidebar={() => setMobileSidebarOpen(v => !v)}
                     mobileSettingsOpen={mobileSettingsOpen}
@@ -239,6 +236,7 @@ export default function Lamarzito() {
                         onRequestCreate={handleRequestCreate}
                         initialInput={pendingMessage ?? undefined}
                         autoSend={!!pendingMessage}
+                        onConfigureKey={() => setShowSettings(true)}
                     />
                 )}
             </main>
@@ -246,14 +244,6 @@ export default function Lamarzito() {
             {showSettings && (
                 <SettingsModal
                     onClose={() => setShowSettings(false)}
-                    onOpenInfo={() => { setShowSettings(false); setShowApiKeyInfo(true) }}
-                />
-            )}
-
-            {showApiKeyInfo && (
-                <BYOAKInfoModal
-                    onClose={() => setShowApiKeyInfo(false)}
-                    onOpenSettings={() => setShowSettings(true)}
                 />
             )}
 

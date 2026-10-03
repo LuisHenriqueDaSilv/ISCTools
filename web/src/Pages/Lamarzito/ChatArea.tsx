@@ -41,6 +41,7 @@ interface Props {
     onRequestCreate?: (message: string) => void
     initialInput?: string
     autoSend?: boolean
+    onConfigureKey?: () => void
 }
 
 const SUGGESTIONS = [
@@ -119,8 +120,10 @@ export default function ChatArea({
     onRequestCreate,
     initialInput,
     autoSend,
+    onConfigureKey,
 }: Props) {
     const [messages, setMessages] = useState<ChatMessage[]>(initialMessages)
+    const hasApiKey = !!getCookie('gemini_api_key')
     const [input, setInput] = useState(initialInput ?? '')
     const [sending, setSending] = useState(false)
     const [fallbackNotice, setFallbackNotice] = useState<FallbackNotice | null>(null)
@@ -169,6 +172,8 @@ export default function ChatArea({
     }
 
     function fillSuggestion(message: string) {
+        // sem chave o campo está bloqueado e mostra o aviso de configuração
+        if (!hasApiKey) return
         setInput(message)
         textareaRef.current?.focus()
         // update height for pre-filled text
@@ -180,21 +185,29 @@ export default function ChatArea({
         })
     }
 
+    function showMissingKeyToast() {
+        window.dispatchEvent(new CustomEvent('app:error', {
+            detail: {
+                message: 'Adicione sua Chave de API do Google antes de enviar mensagens.',
+                action: { label: 'Configurar chave', onClick: () => onConfigureKey?.() },
+            },
+        }))
+    }
+
     async function send() {
         const content = input.trim()
         if (!content || sending) return
+
+        if (!hasApiKey) {
+            showMissingKeyToast()
+            return
+        }
 
         if (!conversationId) {
             onRequestCreate?.(content)
             return
         }
 
-        const apiKey = getCookie('gemini_api_key')
-
-        if (!apiKey) {
-            window.dispatchEvent(new CustomEvent('app:error', { detail: 'Configure sua Google API Key antes de enviar mensagens.' }))
-            return
-        }
 
         setInput('')
         if (textareaRef.current) textareaRef.current.style.height = 'auto'
@@ -308,7 +321,7 @@ export default function ChatArea({
 
         const apiKey = getCookie('gemini_api_key')
         if (!apiKey) {
-            window.dispatchEvent(new CustomEvent('app:error', { detail: 'Configure sua Google API Key antes de enviar mensagens.' }))
+            showMissingKeyToast()
             return
         }
 
@@ -488,10 +501,10 @@ export default function ChatArea({
             </div>
 
             <div className={styles.inputArea}>
-                <div className={styles.inputRow}>
+                <div className={`${styles.inputRow} ${hasApiKey ? '' : styles.inputRowLocked}`}>
                     <textarea
                         ref={textareaRef}
-                        className={styles.chatInput}
+                        className={`${styles.chatInput} ${hasApiKey ? '' : styles.chatInputLocked}`}
                         value={input}
                         onChange={e => {
                             setInput(e.target.value)
@@ -499,17 +512,25 @@ export default function ChatArea({
                             e.target.style.height = `${e.target.scrollHeight}px`
                         }}
                         onKeyDown={onKeyDown}
-                        placeholder="Digite sua dúvida... (Enter para enviar, Shift+Enter para nova linha)"
+                        placeholder={hasApiKey
+                            ? 'Digite sua dúvida... (Enter para enviar, Shift+Enter para nova linha)'
+                            : 'Configure sua Chave de API do Google para conversar'}
                         rows={1}
-                        disabled={sending}
+                        disabled={sending || !hasApiKey}
                     />
-                    <button
-                        className={styles.sendBtn}
-                        onClick={send}
-                        disabled={!input.trim() || sending}
-                    >
-                        <PaperPlaneTilt size={16} weight="fill" />
-                    </button>
+                    {hasApiKey ? (
+                        <button
+                            className={styles.sendBtn}
+                            onClick={send}
+                            disabled={!input.trim() || sending}
+                        >
+                            <PaperPlaneTilt size={16} weight="fill" />
+                        </button>
+                    ) : (
+                        <button className={styles.keyBannerBtn} onClick={onConfigureKey}>
+                            Configurar chave
+                        </button>
+                    )}
                 </div>
             </div>
         </div>

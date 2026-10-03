@@ -1,18 +1,23 @@
 import { useEffect, useState } from 'react'
-import { X, Eye, EyeSlash, Question } from '@phosphor-icons/react'
+import { X, Eye, EyeSlash, ArrowSquareOut } from '@phosphor-icons/react'
 import { getCookie, setCookie } from '../../utils/cookies'
 import { useCookieConsent } from '../../contexts/CookieConsentContext'
 import styles from './styles.module.scss'
 
 interface Props {
     onClose: () => void
-    onOpenInfo: () => void
 }
 
-export default function SettingsModal({ onClose, onOpenInfo }: Props) {
+const STEPS = [
+    'Abra o Google AI Studio e faça login',
+    'Clique em "Create API key" e copie a chave gerada (começa com AIza...)',
+    'Cole a chave abaixo e salve',
+]
+
+export default function SettingsModal({ onClose }: Props) {
     const [apiKey, setApiKey] = useState('')
     const [showKey, setShowKey] = useState(false)
-    const { requestConsent } = useCookieConsent()
+    const { requestConsent, status } = useCookieConsent()
 
     useEffect(() => {
         setApiKey(getCookie('gemini_api_key'))
@@ -29,16 +34,47 @@ export default function SettingsModal({ onClose, onOpenInfo }: Props) {
         <div className={styles.modalOverlay} onClick={onClose}>
             <div className={styles.modal} onClick={e => e.stopPropagation()}>
                 <div className={styles.modalHeader}>
-                    <h3>Google API Key</h3>
+                    <h3>Chave de API do Google</h3>
                     <button className={styles.iconBtn} onClick={onClose}><X size={18} /></button>
                 </div>
 
                 <div className={styles.modalBody}>
-                    <button className={styles.byoakInfoBtn} onClick={onOpenInfo}>
-                        <Question size={14} weight="bold" />
-                        O que é Bring Your Own API Key?
-                    </button>
-                    <label className={styles.fieldLabel}>Google API Key</label>
+                    <p className={styles.fieldHint}>
+                        Para usar o chat, informe sua própria chave de API do Google. Ela fica salva apenas no seu navegador.
+                    </p>
+
+                    <ol className={styles.infoSteps}>
+                        {STEPS.map((text, i) => (
+                            <li key={i} className={styles.infoStep}>
+                                <span className={styles.infoStepNum}>{i + 1}</span>
+                                <span className={styles.infoStepText}>
+                                    {text}
+                                    {i === 0 && (
+                                        <>
+                                            {' '}
+                                            <a
+                                                href="https://aistudio.google.com"
+                                                target="_blank"
+                                                rel="noopener noreferrer"
+                                                className={styles.infoLink}
+                                            >
+                                                aistudio.google.com
+                                                <ArrowSquareOut size={11} />
+                                            </a>
+                                        </>
+                                    )}
+                                </span>
+                            </li>
+                        ))}
+                    </ol>
+
+                    {status === 'declined' && (
+                        <p className={styles.fieldHint} role="status">
+                            Você recusou os cookies, então a chave não pode ser salva. Aceite os cookies ao clicar em Salvar para guardá-la.
+                        </p>
+                    )}
+
+                    <label className={styles.fieldLabel}>Chave de API</label>
                     <div className={styles.apiKeyWrapper}>
                         <input
                             type={showKey ? 'text' : 'password'}
@@ -51,11 +87,6 @@ export default function SettingsModal({ onClose, onOpenInfo }: Props) {
                             {showKey ? <EyeSlash size={16} /> : <Eye size={16} />}
                         </button>
                     </div>
-                    <p className={styles.fieldHint}>
-                        Obtém sua chave em{' '}
-                        <span className={styles.link}>aistudio.google.com</span>.
-                        A chave é salva apenas no seu navegador.
-                    </p>
                 </div>
 
                 <div className={styles.modalFooter}>
