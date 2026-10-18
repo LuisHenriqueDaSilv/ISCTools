@@ -1333,6 +1333,19 @@
     }
 }
 
+.discontinuedNotice {
+    max-width: 520px;
+    padding: 0 1rem;
+
+    p {
+        line-height: 1.6;
+        color: var(--dracula-foreground);
+        opacity: 0.9;
+    }
+
+    strong { color: var(--dracula-foreground); }
+}
+
 .loginIcon {
     width: 52px;
     height: 52px;
